@@ -9,6 +9,6 @@ services:
       - "./init:/docker-entrypoint-initdb.d"
       - "./mongo-volume:/data/db"
     environment:
-      - MONGO_INITDB_DATABASE=fhirwork-db
+      - MONGO_INITDB_DATABASE=amplifhir-db
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=root

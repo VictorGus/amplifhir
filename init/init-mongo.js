@@ -3,5 +3,5 @@ db.createUser({
   pwd:  "root",
   roles: [{
     role: "readWrite",
-    db: "fhirwork-db"}]
+    db: "amplifhir-db"}]
 })

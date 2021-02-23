@@ -2,7 +2,7 @@ SHELL = bash
 
 MONGO_IMAGE ?= mongo
 MONGO_PORT  ?= 27017
-MONGO_DATABASE ?= fhirwork-db
+MONGO_DATABASE ?= amplifhir-db
 MONGO_USER ?= root
 MONGO_PASSWORD ?= root
 MONGO_HOST ?= localhost
