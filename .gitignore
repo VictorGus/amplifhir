@@ -9,7 +9,7 @@ build.dev
 /classes/
 /target/
 /checkouts/
-/pgdata/
+/mongo-volume/
 .lein-deps-sum
 .lein-repl-history
 .lein-plugins/

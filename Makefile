@@ -1,11 +1,11 @@
 SHELL = bash
 
-PGPORT     ?= 5443
-PGHOST     ?= localhost
-PGUSER     ?= postgres
-PGDATABASE ?= testbase
-PGPASSWORD ?= postgres
-PGIMAGE    ?= postgres:latest
+MONGO_IMAGE ?= mongo
+MONGO_PORT  ?= 27017
+MONGO_DATABASE ?= fhirwork-db
+MONGO_USER ?= root
+MONGO_PASSWORD ?= root
+MONGO_HOST ?= localhost
 
 .EXPORT_ALL_VARIABLES:
 .PHONY: test build
@@ -43,10 +43,3 @@ pub:
 
 pub-ui:
 	docker push victor13533/web-test-ui:latest
-
-docker-build-ui:
-	cp ui/resources/public/config.js ui/build/js/ && docker build -f Dockerfile-ui -t victor13533/web-test-ui .
-
-deployment:
-	kubectl apply -f ./deploy/backend.yaml && kubectl apply -f ./deploy/front-end.yaml && kubectl apply -f ./deploy/pg-cm.yaml
-

@@ -1,42 +1,15 @@
 (ns app.dbcore
-  (:require [honeysql.core       :as hsql]
-            [hikari-cp.core      :as hc]
-            [clojure.java.jdbc   :as jdbc]
-            [clj-postgresql.core :as pg]
-            [app.manifest        :as m]))
+  (:require [clojure.java.jdbc   :as jdbc]
+            [cheshire.core       :as json]
+            [monger.core         :as mg]
+            [monger.credentials  :as mg-cred]
+            [monger.collection   :as mg-col]
+            [monger.conversion   :as mg-conv]
+            [app.manifest        :refer [app-config]]))
 
-(def pool-config (delay (pg/pool :host     (get-in m/app-config [:db :host])
-                                 :port     (get-in m/app-config [:db :port])
-                                 :user     (get-in m/app-config [:db :user])
-                                 :password (get-in m/app-config [:db :password])
-                                 :dbname   (get-in m/app-config [:db :dbname])
-                                 :hikari {:read-only true})))
+(def db-connection (delay
+                    (let [connection (mg/connect-with-credentials (get-in app-config [:db :host]) (get-in app-config [:db :port]) (mg-cred/create (get-in app-config [:db :user]) (get-in app-config [:db :dbname]) (.toCharArray (get-in app-config [:db :password]))))
+                          db         (mg/get-db connection (get-in app-config [:db :dbname]))]
+                      db)))
 
-(def test-config (delay (pg/pool :host     (get-in m/app-config [:db :host])
-                                 :port     (get-in m/app-config [:db :port])
-                                 :user     (get-in m/app-config [:db :user])
-                                 :password (get-in m/app-config [:db :password])
-                                 :dbname   "fortest"
-                                 :hikari {:read-only true})))
-
-(defn query [query ctx]
-  (->> query hsql/format
-       (jdbc/query @ctx)))
-
-(defn query-first [query ctx]
-  (->> query hsql/format
-       (jdbc/query @ctx)
-       first))
-
-(defn execute [query ctx]
-  (->> query hsql/format
-       (jdbc/execute! @ctx)
-       first))
-
-(defn execute-test [query]
-  (->> query hsql/format
-       (jdbc/execute! @test-config)
-       first))
-
-(defn truncate-test []
-  (jdbc/execute! @test-config "truncate patient"))
+(mg-col/find-maps @db-connection "Documents")

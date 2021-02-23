@@ -1,14 +1,14 @@
-version: '2.0'
+version: '3'
 services:
   db:
-    image: "${PGIMAGE}"   
-    container_name: testbase 
+    image: "${MONGO_IMAGE}"   
+    container_name: fhirwork-base
     ports:
-      - "${PGPORT}:5432"
+      - "${MONGO_PORT}:27017"
     volumes:
       - "./init:/docker-entrypoint-initdb.d"
-      - "./pgdata:/var/lib/postgresql/data"
+      - "./mongo-volume:/data/db"
     environment:
-     POSTGRES_USER:     "${PGUSER}"
-     POSTGRES_PASSWORD: "${PGPASSWORD}"
-     POSTGRES_DB:       "${PGDATABASE}"
+      - MONGO_INITDB_DATABASE=fhirwork-db
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root

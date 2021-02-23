@@ -1,21 +1,19 @@
 (ns app.core
   (:require [clojure.java.io :as io]
             [route-map.core  :as rm]
-            [app.manifest    :as m]
             [cheshire.core   :as json]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.cors   :refer [wrap-cors]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.json   :refer [wrap-json-response wrap-json-body]]
-            [app.actions :as actions]
-            [app.crud    :as crud]
             [app.dbcore  :as db]
+            [app.actions :as action]
             [org.httpkit.server :as server]
             [clojure.string     :as str])
   (:gen-class))
 
 (defn routes [ctx]
-  {"test" {:GET (fn [req] req)}})
+  {"test" {:GET (fn [req] {:body {:message "test"}})}})
 
 (defn params-to-keyword [params]
   (reduce-kv (fn [acc k v]
@@ -47,11 +45,18 @@
              "Access-Control-Allow-Credentials" "true"
              "Access-Control-Expose-Headers" "Location, Content-Location, Category, Content-Type, X-total-count"})))
 
+(defn handle-input-stream [{:keys [body]}]
+  (if (and body
+           (instance? org.httpkit.BytesInputStream body))
+    (json/parse-string (slurp body) true)
+    body))
+
 (defn mk-handler [dispatch]
   (fn [{headers :headers uri :uri :as req}]
     (if (= :options (:request-method req))
       (preflight req)
-      (let [resp (dispatch req)]
+      (let [req (merge req {:body (handle-input-stream req)})
+            resp (dispatch req)]
         (-> resp (allow req))))))
 
 (defn app [ctx]
@@ -70,11 +75,8 @@
     (reset! state nil)))
 
 (defn start-server []
-  (let [app* (app db/pool-config)]
-    (reset! state (server/run-server app* {:port (as-> (get-in m/app-config [:app :port]) port
-                                                  (cond-> port
-                                                    (string? port)
-                                                    Integer/parseInt))}))))
+  (let [app* (app {} #_db/pool-config)]
+    (reset! state (server/run-server app* {:port 9090}))))
 
 (defn restart-server [] (stop-server) (start-server))
 
@@ -84,4 +86,5 @@
 
 (comment
   (restart-server)
+
   )
