@@ -7,7 +7,6 @@
             [app.manifest        :refer [app-config]]))
 
 (defn create-client [user password dbname]
-  (println user password dbname)
   (mg-cred/create user dbname (.toCharArray password)))
 
 (defn create-connection [{{:keys [host port user dbname password]} :db :as config}]
