@@ -112,7 +112,7 @@
   (mg-col/remove @db collection query))
 
 (defn delete-by-id [db collection id]
-  (mg-col/remove @db collection id))
+  (mg-col/remove-by-id @db collection id))
 
 (comment
 
@@ -125,9 +125,11 @@
 
   (mg-col/update @db-connection "documents" {:name "Test1"} {:age 20})
 
-  (search db-connection "documents" {:age 33})
+  (search db-connection "documents" {:age 32})
 
   (update-by-id db-connection "documents" "123" {:age 33})
+
+  (delete-by-id db-connection :documents "123567")
 
 
   )
