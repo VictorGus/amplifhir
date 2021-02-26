@@ -5,6 +5,7 @@
             [monger.collection   :as mg-col]
             [monger.conversion   :as mg-conv]
             [monger.operators    :as mg-ops]
+            [monger.query        :as mg-q]
             [app.manifest        :refer [app-config]]))
 
 
@@ -43,7 +44,9 @@
    :mod         mg-ops/$mod
    :type        mg-ops/$type
    :size        mg-ops/$size
-   :not         mg-ops/$not})
+   :not         mg-ops/$not
+   :match       mg-ops/$match
+   })
 
 (defn get-operator [k]
   (k operators-dictionary))
@@ -57,6 +60,15 @@
 
 (defn extract-db [connection dbname]
   (mg/get-db connection dbname))
+
+(defn enrich-object [object]
+  (clojure.walk/postwalk (fn [k]
+                           (if (keyword? k)
+                             (if-let [op (get-operator k)]
+                               op
+                               k)
+                             k))
+                         object))
 
 (defn get-connection [{{:keys [dbname]} :db :as config}]
   (let [connection (create-connection config)
@@ -82,30 +94,18 @@
 
 (defn update
   ([db collection query object]
-   (let [object* (reduce-kv (fn [acc k v]
-                             (if-let [op (get-operator k)]
-                               (assoc acc op v)
-                               (assoc acc k v))) {} object)]
+   (let [object* (enrich-object object)]
      (mg-col/update @db collection query object*)))
   ([db collection query object {:keys [upsert] :as ops}]
-   (let [object* (reduce-kv (fn [acc k v]
-                             (if-let [op (get-operator k)]
-                               (assoc acc op v)
-                               (assoc acc k v))) {} object)]
+   (let [object* (enrich-object object)]
      (mg-col/update db collection query object* {:upsert upsert}))))
 
 (defn update-by-id
   ([db collection id object]
-   (let [object* (reduce-kv (fn [acc k v]
-                             (if-let [op (get-operator k)]
-                               (assoc acc op v)
-                               (assoc acc k v))) {} object)]
+   (let [object* (enrich-object object)]
      (mg-col/update-by-id @db collection id object*)))
   ([db collection id object {:keys [upsert] :as ops}]
-   (let [object* (reduce-kv (fn [acc k v]
-                             (if-let [op (get-operator k)]
-                               (assoc acc op v)
-                               (assoc acc k v))) {} object)]
+   (let [object* (enrich-object object)]
      (mg-col/update-by-id @db collection id object* {:upsert upsert}))))
 
 (defn delete [db collection query]
@@ -125,12 +125,10 @@
 
   (mg-col/update @db-connection "documents" {:name "Test1"} {:age 20})
 
-  (search db-connection "documents" {:age 32})
+  (search db-connection "documents" {:_id "123"})
 
-  (update-by-id db-connection "documents" "123" {:age 33})
+  (update-by-id db-connection "documents" "123" {:set {:name "test" :age 32}})
 
   (delete-by-id db-connection :documents "123567")
 
-
-  )
-
+ )
