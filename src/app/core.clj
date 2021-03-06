@@ -6,14 +6,19 @@
             [ring.middleware.cors   :refer [wrap-cors]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.json   :refer [wrap-json-response wrap-json-body]]
-            [app.dbcore  :as db]
-            [app.actions :as action]
+            [app.dbcore         :as db]
+            [app.actions        :as action]
+            [app.manifest       :as manifest]
+            [app.rest.operation :as op]
+            [app.rest.module    :as module]
+            [app.context        :as context]
             [org.httpkit.server :as server]
-            [clojure.string     :as str])
+            [clojure.string     :as str]
+            )
   (:gen-class))
 
 (defn routes [ctx]
-  {"test" {:GET (fn [req] {:body {:message "test"}})}})
+  (op/build-routes ctx))
 
 (defn params-to-keyword [params]
   (reduce-kv (fn [acc k v]
@@ -75,7 +80,9 @@
     (reset! state nil)))
 
 (defn start-server []
-  (let [app* (app {} #_db/pool-config)]
+  (let [db-connection db/db-connection
+        app* (app (swap! context/global-context
+                         assoc :db/connection db-connection :routes (module/extract-routes)))]
     (reset! state (server/run-server app* {:port 9090}))))
 
 (defn restart-server [] (stop-server) (start-server))
@@ -86,5 +93,6 @@
 
 (comment
   (restart-server)
+
 
   )

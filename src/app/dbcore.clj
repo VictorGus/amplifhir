@@ -131,4 +131,6 @@
 
   (delete-by-id db-connection :documents "123567")
 
+  (search-by-id db-connection :test "123")
+
  )

@@ -1,11 +1,6 @@
-(ns app.rest.operation
-  (:require [cheshire.core :as json]
-            [app.manifest :refer [app-config]]))
+(ns app.rest.operation)
 
-{:resource-read {:path ["test"]
-                 :method :GET}}
-
-(def registered-operations (atom {}))
+(defonce registered-operations (atom {}))
 
 (defn get-operation [handler-key]
   (get @registered-operations handler-key))
@@ -18,6 +13,10 @@
 
 (defn create-operation [handler-key req-handler]
   (swap! registered-operations assoc handler-key req-handler))
+
+(defn build-routes [{:keys [routes] :as ctx}]
+  (let [normalized-routes (normalize-routes routes)]
+    normalized-routes))
 
 (comment
 
