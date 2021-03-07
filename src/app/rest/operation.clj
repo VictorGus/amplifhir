@@ -1,21 +1,22 @@
 (ns app.rest.operation)
 
-(defonce registered-operations (atom {}))
+;; (defonce registered-operations (atom {}))
 
-(defn get-operation [handler-key]
-  (get @registered-operations handler-key))
+;; (defn get-operation [handler-key]
+;;   (get @registered-operations handler-key))
 
-(defn normalize-routes [routes]
-  (reduce-kv (fn [acc k v]
-               (let [h (get-operation k)]
-                 (assoc-in acc (conj (:path v) (:method v)) h)))
-             {} routes))
+(defn normalize-routes [api]
+  (let [handlers (:operations api)]
+    (reduce-kv (fn [acc k v]
+                 (let [h (k handlers)]
+                   (assoc-in acc (conj (:path v) (:method v)) h)))
+               {} (:routes api))))
 
-(defn create-operation [handler-key req-handler]
-  (swap! registered-operations assoc handler-key req-handler))
+(defn create-operation [handler-key req-handler acc]
+  (assoc acc handler-key req-handler))
 
-(defn build-routes [{:keys [routes] :as ctx}]
-  (let [normalized-routes (normalize-routes routes)]
+(defn build-routes [{:keys [api] :as ctx}]
+  (let [normalized-routes (normalize-routes api)]
     normalized-routes))
 
 (comment

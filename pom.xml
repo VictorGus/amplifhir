@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-                                            
+                                                
+  
+  
   
   
   
@@ -22,7 +24,9 @@
   
   
   <modelVersion>4.0.0</modelVersion>
-                                            
+                                                
+  
+  
   
   
   
@@ -44,7 +48,9 @@
   
   
   <groupId>pof</groupId>
-                                            
+                                                
+  
+  
   
   
   
@@ -66,7 +72,9 @@
   
   
   <artifactId>app</artifactId>
-                                            
+                                                
+  
+  
   
   
   
@@ -88,7 +96,9 @@
   
   
   <version>1.0.0-SNAPSHOT</version>
-                                            
+                                                
+  
+  
   
   
   
@@ -110,7 +120,9 @@
   
   
   <name>web-project-template</name>
-                                            
+                                                
+  
+  
   
   
   
@@ -165,16 +177,6 @@
         
     <dependency>
             
-      <groupId>clj-postgresql</groupId>
-            
-      <artifactId>clj-postgresql</artifactId>
-            
-      <version>0.7.0</version>
-          
-    </dependency>
-        
-    <dependency>
-            
       <groupId>honeysql</groupId>
             
       <artifactId>honeysql</artifactId>
@@ -195,16 +197,6 @@
         
     <dependency>
             
-      <groupId>org.postgresql</groupId>
-            
-      <artifactId>postgresql</artifactId>
-            
-      <version>42.2.9.jre7</version>
-          
-    </dependency>
-        
-    <dependency>
-            
       <groupId>clj-http</groupId>
             
       <artifactId>clj-http</artifactId>
@@ -220,16 +212,6 @@
       <artifactId>route-map</artifactId>
             
       <version>0.0.7-RC4</version>
-          
-    </dependency>
-        
-    <dependency>
-            
-      <groupId>org.clojure</groupId>
-            
-      <artifactId>java.jdbc</artifactId>
-            
-      <version>0.7.11</version>
           
     </dependency>
         
@@ -260,6 +242,16 @@
       <artifactId>cheshire</artifactId>
             
       <version>5.9.0</version>
+          
+    </dependency>
+        
+    <dependency>
+            
+      <groupId>com.novemberain</groupId>
+            
+      <artifactId>monger</artifactId>
+            
+      <version>3.5.0</version>
           
     </dependency>
         
@@ -314,7 +306,9 @@
     </dependency>
       
   </dependencies>
-                                            
+                                                
+  
+  
   
   
   
@@ -336,7 +330,9 @@
   
   
   <build>
-                                                                                        
+                                                                                                
+    
+    
     
     
     
@@ -358,7 +354,9 @@
     
     
     <sourceDirectory>src</sourceDirectory>
-                                                                                      
+                                                                                              
+  
+  
   
   
   
@@ -380,7 +378,9 @@
   
   
   </build>
-                                            
+                                                
+  
+  
   
   
   
@@ -412,7 +412,9 @@
     </repository>
       
   </repositories>
-                                          
+                                              
+
+
 
 
 

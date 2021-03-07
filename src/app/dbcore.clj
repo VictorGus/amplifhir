@@ -133,4 +133,7 @@
 
   (search-by-id db-connection :test "123")
 
+  (create db-connection "Patient" {:_id 1234
+                                   :resourceType "Patient"})
+
  )

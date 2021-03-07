@@ -14,6 +14,7 @@
             [app.context        :as context]
             [org.httpkit.server :as server]
             [clojure.string     :as str]
+            [app.fhir.operations]
             )
   (:gen-class))
 
@@ -81,8 +82,9 @@
 
 (defn start-server []
   (let [db-connection db/db-connection
+        _ (swap! context/global-context assoc :db/connection db-connection)
         app* (app (swap! context/global-context
-                         assoc :db/connection db-connection :routes (module/extract-routes)))]
+                         assoc :api (app.fhir.operations/shape-up-routes @context/global-context)))]
     (reset! state (server/run-server app* {:port 9090}))))
 
 (defn restart-server [] (stop-server) (start-server))
@@ -93,6 +95,5 @@
 
 (comment
   (restart-server)
-
 
   )
