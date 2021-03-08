@@ -10,6 +10,7 @@
             [app.actions        :as action]
             [app.manifest       :as manifest]
             [app.rest.operation :as op]
+            [app.rest.error     :as error]
             [app.rest.module    :as module]
             [app.context        :as context]
             [org.httpkit.server :as server]
@@ -30,7 +31,7 @@
     (if-let [res (rm/match [meth uri] (routes ctx))]
       ((:match res) (-> (assoc req :params (params-to-keyword (:params req)))
                         (update-in [:params] merge (:params res))))
-      {:status 404 :body {:error "Not found"}})))
+      (error/create-error {:error-type :not-found}))))
 
 (defn preflight
   [{meth :request-method hs :headers :as req}]
@@ -84,7 +85,9 @@
   (let [db-connection db/db-connection
         _ (swap! context/global-context assoc :db/connection db-connection)
         app* (app (swap! context/global-context
-                         assoc :api (app.fhir.operations/shape-up-routes @context/global-context)))]
+                         assoc :api (merge-with merge
+                                                {}
+                                                (app.fhir.operations/shape-up-routes @context/global-context))))]
     (reset! state (server/run-server app* {:port 9090}))))
 
 (defn restart-server [] (stop-server) (start-server))

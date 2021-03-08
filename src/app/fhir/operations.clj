@@ -1,29 +1,11 @@
 (ns app.fhir.operations
   (:require [app.rest.operation :as op]
             [app.rest.error     :as error]
-            [app.rest.utils     :as u]
+            [app.rest.crud      :as crud]
             [app.context        :as context]
-            [app.dbcore         :as db]
             [cheshire.core      :as json]
             [clojure.java.io    :as io]
             [clojure.string     :as str]))
-
-(defn read-by-id [{conn :db/connection rt :entity :as ctx}]
-  (fn [{:keys [params] :as request}]
-    (if-let [q-res (db/search-by-id conn rt (:id params))]
-      {:body q-res
-       :status 200}
-      (error/create-error {:error-type :not-found}))))
-
-;;TODO add validation
-(defn create-resource [{conn :db/connection rt :entity :as ctx}]
-  (fn [{:keys [body] :as request}]
-    (let [id (u/generate-uuid)]
-      (if-let [q-res (db/create conn rt {:_id id
-                                         :resource body
-                                         :resourceType rt})]
-        {:body q-res
-         :status 201}))))
 
 (defn edn-resource->map [f]
   (-> (io/resource f) slurp read-string))
@@ -38,12 +20,12 @@
 (defmethod inject-operation :read [_ rt ctx acc]
   (let [op-name (to-op-name :read-by-id rt)
         ctx*    (assoc ctx :entity rt)]
-    (op/create-operation op-name (read-by-id ctx*) acc)))
+    (op/create-operation op-name (crud/read-by-id ctx*) acc)))
 
 (defmethod inject-operation :create [_ rt ctx acc]
   (let [op-name (to-op-name :create rt)
         ctx*    (assoc ctx :entity rt)]
-    (op/create-operation op-name (create-resource ctx*) acc)))
+    (op/create-operation op-name (crud/create-resource ctx*) acc)))
 
 (defn shape-up-handlers [ctx rs]
   (reduce (fn [acc r]
