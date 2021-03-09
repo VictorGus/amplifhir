@@ -27,22 +27,51 @@
         ctx*    (assoc ctx :entity rt)]
     (op/create-operation op-name (crud/create-resource ctx*) acc)))
 
+(defmethod inject-operation :delete [_ rt ctx acc]
+  (let [op-name (to-op-name :delete rt)
+        ctx*    (assoc ctx :entity rt)]
+    (op/create-operation op-name (crud/delete-resource ctx*) acc)))
+
+(defmethod inject-operation :update [_ rt ctx acc]
+  (let [op-name (to-op-name :update rt)
+        ctx*    (assoc ctx :entity rt)]
+    (op/create-operation op-name (crud/update-resource ctx*) acc)))
+
+(defmethod inject-operation :patch [_ rt ctx acc]
+  (let [op-name (to-op-name :patch rt)
+        ctx*    (assoc ctx :entity rt)]
+    (op/create-operation op-name (crud/patch-resource ctx*) acc)))
+
 (defn shape-up-handlers [ctx rs]
   (reduce (fn [acc r]
             (->> acc
                  (inject-operation :read   r ctx)
-                 (inject-operation :create r ctx)))
+                 (inject-operation :create r ctx)
+                 (inject-operation :delete r ctx)
+                 (inject-operation :update r ctx)
+                 (inject-operation :patch  r ctx)
+                 ))
           {}
           rs))
 
 ;; TODO: add rest operations
 (defn create-basic-routes [rt]
   (let [read-op   (to-op-name :read-by-id rt)
-        create-op (to-op-name :create rt)]
+        create-op (to-op-name :create rt)
+        delete-op (to-op-name :delete rt)
+        update-op (to-op-name :update rt)
+        patch-op  (to-op-name :patch rt)]
     {read-op   {:method :GET
                 :path [(name rt) [:id]]}
      create-op {:method :POST
-                :path [(name rt)]}}))
+                :path [(name rt)]}
+     delete-op {:method :DELETE
+                :path [(name rt) [:id]]}
+     update-op {:method :PUT
+                :path [(name rt) [:id]]}
+     patch-op  {:method :PATCH
+                :path [(name rt) [:id]]}
+     }))
 
 (defn shape-up-routes [ctx]
   (let [rs (:entities (edn-resource->map "fhir.edn"))]

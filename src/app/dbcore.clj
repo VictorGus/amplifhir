@@ -5,6 +5,7 @@
             [monger.collection   :as mg-col]
             [monger.conversion   :as mg-conv]
             [monger.operators    :as mg-ops]
+            [monger.result       :as mg-res]
             [monger.query        :as mg-q]
             [app.manifest        :refer [app-config]]))
 
@@ -114,6 +115,12 @@
 (defn delete-by-id [db collection id]
   (mg-col/remove-by-id @db collection id))
 
+(def updated-existing? mg-res/updated-existing?)
+
+(def acknowledged? mg-res/acknowledged?)
+
+(def affected-count mg-res/affected-count)
+
 (comment
 
   (mg-col/insert-and-return @db-connection "documents" {:name "Monger"
@@ -127,7 +134,7 @@
 
   (search db-connection "documents" {:_id "123"})
 
-  (update-by-id db-connection "documents" "123" {:set {:name "test" :age 32}})
+  (mg-conv/from-db-object  false)
 
   (delete-by-id db-connection :documents "123567")
 
@@ -135,5 +142,6 @@
 
   (create db-connection "Patient" {:_id 1234
                                    :resourceType "Patient"})
+
 
  )
