@@ -11,7 +11,7 @@
             [app.manifest       :as manifest]
             [app.rest.operation :as op]
             [app.rest.error     :as error]
-            [app.rest.module    :as module]
+            [app.rest.utils     :as u]
             [app.context        :as context]
             [org.httpkit.server :as server]
             [clojure.string     :as str]
@@ -85,9 +85,10 @@
   (let [db-connection db/db-connection
         _ (swap! context/global-context assoc :db/connection db-connection)
         app* (app (swap! context/global-context
-                         assoc :api (merge-with merge
-                                                {}
-                                                (app.fhir.operations/shape-up-routes @context/global-context))))]
+                         #(merge % {:api (merge-with merge
+                                                     {}
+                                                     (app.fhir.operations/shape-up-routes @context/global-context))}
+                                 (dissoc (:app manifest/app-config) :port))))]
     (reset! state (server/run-server app* {:port 9090}))))
 
 (defn restart-server [] (stop-server) (start-server))

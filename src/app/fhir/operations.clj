@@ -73,7 +73,7 @@
                 :path [(name rt) [:id]]}
      }))
 
-(defn shape-up-routes [ctx]
+(defn shape-up-routes [{{{el :entities_list} :fhir} :modules :as ctx}]
   (let [rs (:entities (edn-resource->map "fhir.edn"))]
     {:routes (apply merge (mapv #(create-basic-routes %) rs))
      :operations (shape-up-handlers ctx rs)}))
