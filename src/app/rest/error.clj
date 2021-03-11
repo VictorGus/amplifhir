@@ -1,7 +1,7 @@
 (ns app.rest.error)
 
 ;;TODO separate code for requested deleted resources
-(defn make-operation-outcome [{:keys [error-type sub-type]}]
+(defn make-operation-outcome [{:keys [error-type sub-type diagnostics]}]
   (let [resource-body (cond
                         (= :invalid-resource error-type)
                         {:code "invalid"
@@ -18,12 +18,12 @@
                         (= :not-found error-type)
                         {:code "not-found"
                          :severity "error"})]
-    {:issue [(merge resource-body {:diagnostic "TODO"
-                                   :location   "TODO"
-                                   :expression "TODO"})]
+    {:issue [(merge resource-body (into {} (filter second {:diagnostic diagnostics
+                                                           :location   "TODO"
+                                                           :expression "TODO"})))]
      :resourceType "OperationOutcome"}))
 
-(defn create-error [{:keys [error-type sub-type] :as error}]
+(defn create-error [{:keys [error-type sub-type diagnostics] :as error}]
   (let [status (case error-type
                  :unauthorized     401
                  :forbidden        403

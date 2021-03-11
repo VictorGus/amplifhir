@@ -8,7 +8,8 @@
     (if-let [q-res (db/search-by-id conn rt (:id params))]
       {:body q-res
        :status 200}
-      (error/create-error {:error-type :not-found}))))
+      (error/create-error {:error-type :not-found
+                           :diagnostics (str "Resource with id " (:id params) " not found")}))))
 
 ;;TODO add validation
 (defn create-resource [{conn :db/connection rt :entity :as ctx}]
