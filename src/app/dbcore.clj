@@ -47,7 +47,10 @@
    :size        mg-ops/$size
    :not         mg-ops/$not
    :match       mg-ops/$match
-   })
+   :text        mg-ops/$text
+   :search      mg-ops/$search
+   :language    mg-ops/$language
+   :natural     mg-ops/$natural})
 
 (defn get-operator [k]
   (k operators-dictionary))
@@ -109,6 +112,12 @@
    (let [object* (enrich-object object)]
      (mg-col/update-by-id @db collection id object* {:upsert upsert}))))
 
+(defn drop-index
+  ([db collection]
+   (mg-col/drop-indexes @db collection))
+  ([db collection index-name]
+   (mg-col/drop-index @db collection index-name)))
+
 (defn delete [db collection query]
   (mg-col/remove @db collection query))
 
@@ -128,13 +137,17 @@
 
   (mg-col/count @db-connection "documents")
 
-  (mg-col/find-maps @db-connection "documents" {:_id "123"})
+  (mg-col/find-maps @db-connection "Patient" {mg-ops/$text {mg-ops/$search "Foobar"}})
 
-  (mg-col/update @db-connection "documents" {:name "Test1"} {:age 20})
+  (mg-col/indexes-on @db-connection "Patient")
 
-  (search db-connection "documents" {:_id "123"})
+  (mg-col/ensure-index @db-connection :Patient (array-map :name "text") {:name "patient_name_text"})
 
-  (mg-conv/from-db-object  false)
+  (mg-col/update @db-connection "Patient" {:_id "f7188e01-7eaf-4aa8-888c-8e496e41e608"} {mg-ops/$set {:name "Foobar"}})
+
+  (search db-connection "Patient" {})
+
+  (drop-index db-connection "Patient")
 
   (delete-by-id db-connection :documents "123567")
 

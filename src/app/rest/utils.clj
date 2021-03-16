@@ -6,3 +6,14 @@
 
 (defn edn-resource->map [f]
   (-> (io/resource f) slurp read-string))
+
+(comment
+
+
+  ;; (let [r (edn-resource->map "fhir.edn")]
+  ;;   (reduce
+  ;;    r
+  ;;    (:)))
+
+
+  )
