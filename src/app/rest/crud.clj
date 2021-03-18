@@ -54,3 +54,7 @@
          :status 200}
         {:body (error/create-error {:error-type :not-found})
          :status 404}))))
+
+(defn search-resource [{conn :db/connection rt :entity :as ctx}]
+  (fn [{:keys [params] :as request}]
+    ))
