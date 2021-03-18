@@ -42,10 +42,6 @@
         ctx*    (assoc ctx :entity rt)]
     (op/create-operation op-name (crud/patch-resource ctx*) acc)))
 
-(defn search [ctx]
-  (fn [req]
-    ))
-
 (defn shape-up-handlers [ctx rs]
   (reduce (fn [acc r]
             (->> acc

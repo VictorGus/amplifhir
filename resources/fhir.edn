@@ -1,1 +1,474 @@
-{:entities [:DeviceRequest :ServiceRequest :DeviceMetric :CarePlan :Observation :EnrollmentRequest :Group :MessageDefinition :Appointment :BiologicallyDerivedProduct :QuestionnaireResponse :EffectEvidenceSynthesis :MedicinalProductContraindication :EpisodeOfCare :Evidence :SubstancePolymer :SupplyDelivery :SubstanceNucleicAcid :AdverseEvent :Endpoint :SubstanceReferenceInformation :SubstanceSourceMaterial :CompartmentDefinition :DetectedIssue :MedicationAdministration :EvidenceVariable :ImplementationGuide :Goal :Communication :Schedule :DocumentReference :OrganizationAffiliation :DeviceDefinition :Coverage :AuditEvent :MessageHeader :Contract :TestReport :CodeSystem :PlanDefinition :Invoice :ClaimResponse :ChargeItem :CoverageEligibilityResponse :BodyStructure :Parameters :ClinicalImpression :FamilyMemberHistory :MedicinalProductAuthorization :Binary :Composition :PractitionerRole :HealthcareService :Patient :MedicationDispense :DeviceUseStatement :StructureMap :ImmunizationEvaluation :Library :Basic :Slot :ActivityDefinition :Bundle :MedicinalProductInteraction :MolecularSequence :Specimen :DiagnosticReport :Subscription :RequestGroup :Provenance :MedicinalProduct :ChargeItemDefinition :Practitioner :MedicinalProductPackaged :Flag :ExplanationOfBenefit :Linkage :OperationOutcome :MedicinalProductPharmaceutical :Immunization :MedicationKnowledge :ResearchSubject :MedicinalProductIndication :PaymentNotice :NamingSystem :MedicationStatement :EnrollmentResponse :NutritionOrder :Questionnaire :Account :EventDefinition :MedicinalProductUndesirableEffect :SubstanceSpecification :CommunicationRequest :SpecimenDefinition :VerificationResult :DocumentManifest :Task :RiskEvidenceSynthesis :ValueSet :Claim :InsurancePlan :ExampleScenario :ResearchStudy :MedicationRequest :Measure :List :Encounter :CapabilityStatement :VisionPrescription :RiskAssessment :SubstanceProtein :ImmunizationRecommendation :RelatedPerson :Medication :AppointmentResponse :ResearchElementDefinition :Substance :PaymentReconciliation :TestScript :ConceptMap :Person :Condition :CareTeam :CatalogEntry :StructureDefinition :Procedure :Consent :ObservationDefinition :Location :Organization :Device :SupplyRequest :AllergyIntolerance :SearchParameter :ResearchDefinition :OperationDefinition :MedicinalProductManufactured :ImagingStudy :CoverageEligibilityRequest :MedicinalProductIngredient :GuidanceResponse :Media :MeasureReport :GraphDefinition :TerminologyCapabilities]}
+{:entities [:DeviceRequest
+            :ServiceRequest
+            :DeviceMetric
+            :CarePlan
+            :Observation
+            :EnrollmentRequest
+            :Group
+            :MessageDefinition
+            :Appointment
+            :BiologicallyDerivedProduct
+            :QuestionnaireResponse
+            :EffectEvidenceSynthesis
+            :MedicinalProductContraindication
+            :EpisodeOfCare
+            :Evidence
+            :SubstancePolymer
+            :SupplyDelivery
+            :SubstanceNucleicAcid
+            :AdverseEvent
+            :Endpoint
+            :SubstanceReferenceInformation
+            :SubstanceSourceMaterial
+            :CompartmentDefinition
+            :DetectedIssue
+            :MedicationAdministration
+            :EvidenceVariable
+            :ImplementationGuide
+            :Goal
+            :Communication
+            :Schedule
+            :DocumentReference
+            :OrganizationAffiliation
+            :DeviceDefinition
+            :Coverage
+            :AuditEvent
+            :MessageHeader
+            :Contract
+            :TestReport
+            :CodeSystem
+            :PlanDefinition
+            :Invoice
+            :ClaimResponse
+            :ChargeItem
+            :CoverageEligibilityResponse
+            :BodyStructure
+            :Parameters
+            :ClinicalImpression
+            :FamilyMemberHistory
+            :MedicinalProductAuthorization
+            :Binary
+            :Composition
+            :PractitionerRole
+            :HealthcareService
+            :Patient
+            :MedicationDispense
+            :DeviceUseStatement
+            :StructureMap
+            :ImmunizationEvaluation
+            :Library
+            :Basic
+            :Slot
+            :ActivityDefinition
+            :Bundle
+            :MedicinalProductInteraction
+            :MolecularSequence
+            :Specimen
+            :DiagnosticReport
+            :Subscription
+            :RequestGroup
+            :Provenance
+            :MedicinalProduct
+            :ChargeItemDefinition
+            :Practitioner
+            :MedicinalProductPackaged
+            :Flag
+            :ExplanationOfBenefit
+            :Linkage
+            :OperationOutcome
+            :MedicinalProductPharmaceutical
+            :Immunization
+            :MedicationKnowledge
+            :ResearchSubject
+            :MedicinalProductIndication
+            :PaymentNotice
+            :NamingSystem
+            :MedicationStatement
+            :EnrollmentResponse
+            :NutritionOrder
+            :Questionnaire
+            :Account
+            :EventDefinition
+            :MedicinalProductUndesirableEffect
+            :SubstanceSpecification
+            :CommunicationRequest
+            :SpecimenDefinition
+            :VerificationResult
+            :DocumentManifest
+            :Task
+            :RiskEvidenceSynthesis
+            :ValueSet
+            :Claim
+            :InsurancePlan
+            :ExampleScenario
+            :ResearchStudy
+            :MedicationRequest
+            :Measure
+            :List
+            :Encounter
+            :CapabilityStatement
+            :VisionPrescription
+            :RiskAssessment
+            :SubstanceProtein
+            :ImmunizationRecommendation
+            :RelatedPerson
+            :Medication
+            :AppointmentResponse
+            :ResearchElementDefinition
+            :Substance
+            :PaymentReconciliation
+            :TestScript
+            :ConceptMap
+            :Person
+            :Condition
+            :CareTeam
+            :CatalogEntry
+            :StructureDefinition
+            :Procedure
+            :Consent
+            :ObservationDefinition
+            :Location
+            :Organization
+            :Device
+            :SupplyRequest
+            :AllergyIntolerance
+            :SearchParameter
+            :ResearchDefinition
+            :OperationDefinition
+            :MedicinalProductManufactured
+            :ImagingStudy
+            :CoverageEligibilityRequest
+            :MedicinalProductIngredient
+            :GuidanceResponse
+            :Media
+            :MeasureReport
+            :GraphDefinition
+            :TerminologyCapabilities],
+ :resource_list {:DeviceRequest {:resource_elements {},
+                                 :search_parameters {}},
+                 :ServiceRequest {:resource_elements {},
+                                  :search_parameters {}},
+                 :DeviceMetric {:resource_elements {},
+                                :search_parameters {}},
+                 :CarePlan {:resource_elements {},
+                            :search_parameters {}},
+                 :Observation {:resource_elements {},
+                               :search_parameters {}},
+                 :EnrollmentRequest {:resource_elements {},
+                                     :search_parameters {}},
+                 :Group {:resource_elements {}, :search_parameters {}},
+                 :MessageDefinition {:resource_elements {},
+                                     :search_parameters {}},
+                 :Appointment {:resource_elements {},
+                               :search_parameters {}},
+                 :BiologicallyDerivedProduct {:resource_elements {},
+                                              :search_parameters {}},
+                 :QuestionnaireResponse {:resource_elements {},
+                                         :search_parameters {}},
+                 :EffectEvidenceSynthesis {:resource_elements {},
+                                           :search_parameters {}},
+                 :MedicinalProductContraindication {:resource_elements {},
+                                                    :search_parameters {}},
+                 :EpisodeOfCare {:resource_elements {},
+                                 :search_parameters {}},
+                 :Evidence {:resource_elements {},
+                            :search_parameters {}},
+                 :SubstancePolymer {:resource_elements {},
+                                    :search_parameters {}},
+                 :SupplyDelivery {:resource_elements {},
+                                  :search_parameters {}},
+                 :SubstanceNucleicAcid {:resource_elements {},
+                                        :search_parameters {}},
+                 :AdverseEvent {:resource_elements {},
+                                :search_parameters {}},
+                 :Endpoint {:resource_elements {},
+                            :search_parameters {}},
+                 :SubstanceReferenceInformation {:resource_elements {},
+                                                 :search_parameters {}},
+                 :SubstanceSourceMaterial {:resource_elements {},
+                                           :search_parameters {}},
+                 :CompartmentDefinition {:resource_elements {},
+                                         :search_parameters {}},
+                 :DetectedIssue {:resource_elements {},
+                                 :search_parameters {}},
+                 :MedicationAdministration {:resource_elements {},
+                                            :search_parameters {}},
+                 :EvidenceVariable {:resource_elements {},
+                                    :search_parameters {}},
+                 :ImplementationGuide {:resource_elements {},
+                                       :search_parameters {}},
+                 :Goal {:resource_elements {}, :search_parameters {}},
+                 :Communication {:resource_elements {},
+                                 :search_parameters {}},
+                 :Schedule {:resource_elements {},
+                            :search_parameters {}},
+                 :DocumentReference {:resource_elements {},
+                                     :search_parameters {}},
+                 :OrganizationAffiliation {:resource_elements {},
+                                           :search_parameters {}},
+                 :DeviceDefinition {:resource_elements {},
+                                    :search_parameters {}},
+                 :Coverage {:resource_elements {},
+                            :search_parameters {}},
+                 :AuditEvent {:resource_elements {},
+                              :search_parameters {}},
+                 :MessageHeader {:resource_elements {},
+                                 :search_parameters {}},
+                 :Contract {:resource_elements {},
+                            :search_parameters {}},
+                 :TestReport {:resource_elements {},
+                              :search_parameters {}},
+                 :CodeSystem {:resource_elements {},
+                              :search_parameters {}},
+                 :PlanDefinition {:resource_elements {},
+                                  :search_parameters {}},
+                 :Invoice {:resource_elements {},
+                           :search_parameters {}},
+                 :ClaimResponse {:resource_elements {},
+                                 :search_parameters {}},
+                 :ChargeItem {:resource_elements {},
+                              :search_parameters {}},
+                 :CoverageEligibilityResponse {:resource_elements {},
+                                               :search_parameters {}},
+                 :BodyStructure {:resource_elements {},
+                                 :search_parameters {}},
+                 :Parameters {:resource_elements {},
+                              :search_parameters {}},
+                 :ClinicalImpression {:resource_elements {},
+                                      :search_parameters {}},
+                 :FamilyMemberHistory {:resource_elements {},
+                                       :search_parameters {}},
+                 :MedicinalProductAuthorization {:resource_elements {},
+                                                 :search_parameters {}},
+                 :Binary {:resource_elements {},
+                          :search_parameters {}},
+                 :Composition {:resource_elements {},
+                               :search_parameters {}},
+                 :PractitionerRole {:resource_elements {},
+                                    :search_parameters {}},
+                 :HealthcareService {:resource_elements {},
+                                     :search_parameters {}},
+                 :Patient {:resource_elements {},
+                           :search_parameters {:active {:type "token"
+                                                        :expression ["active"]}
+                                               :address {:type "string"
+                                                         :expression ["address"]}
+                                               :address-city {:type "string"
+                                                              :expression ["address" "city"]},
+                                               :address-country {:type "string"
+                                                                 :expression ["address" "country"]} 
+                                               :address-postalcode  {:type "string"
+                                                                     :expression ["address" "postalCode"]}
+                                               :address-state {:type "string"
+                                                               :expression ["adddress" "state"]}
+                                               :address-use   {:type "token"
+                                                               :expression ["address" "use"]}
+                                               :birthdate {:type "date"
+                                                           :expression ["birthDate"]}
+                                               :death-date {:type "date"
+                                                            :expression ["deceased" "dateTime"]}
+                                               :deceased {:type "token"
+                                                          :expression ["deceased"]}
+                                               :email {:type "token"
+                                                       :expression ["telecom" {:system "email"}]}
+                                               :family {:type "string"
+                                                        :expression ["name" "family"]}
+                                               :given {:type "string"
+                                                       :expression ["name" "given"]}
+                                               :general-practitioner {:type "reference"
+                                                                      :expression ["generalPractitioner"]}
+                                               :identifier {:type "token"
+                                                            :expression ["identifier"]}
+                                               :language {:type "token"
+                                                          :expression ["communication" "language"]}
+                                               :link {:type "reference"
+                                                      :expression ["link" "other"]}
+                                               :name {:type "string"
+                                                      :expression ["name"]}
+                                               :organization {:type "reference"
+                                                              :expression ["managingOrganization"]}
+                                               :phone {:type "token"
+                                                       :expression ["telecom" {:system "phone"}]}
+                                               :phonetic {:type "string"
+                                                          :expression ["name"]} 
+                                               :telecom {:type "token"
+                                                         :expression ["telecom"]}
+
+                                               }}
+                 :MedicationDispense {:resource_elements {},
+                                      :search_parameters {}},
+                 :DeviceUseStatement {:resource_elements {},
+                                      :search_parameters {}},
+                 :StructureMap {:resource_elements {},
+                                :search_parameters {}},
+                 :ImmunizationEvaluation {:resource_elements {},
+                                          :search_parameters {}},
+                 :Library {:resource_elements {},
+                           :search_parameters {}},
+                 :Basic {:resource_elements {}, :search_parameters {}},
+                 :Slot {:resource_elements {}, :search_parameters {}},
+                 :ActivityDefinition {:resource_elements {},
+                                      :search_parameters {}},
+                 :Bundle {:resource_elements {},
+                          :search_parameters {}},
+                 :MedicinalProductInteraction {:resource_elements {},
+                                               :search_parameters {}},
+                 :MolecularSequence {:resource_elements {},
+                                     :search_parameters {}},
+                 :Specimen {:resource_elements {},
+                            :search_parameters {}},
+                 :DiagnosticReport {:resource_elements {},
+                                    :search_parameters {}},
+                 :Subscription {:resource_elements {},
+                                :search_parameters {}},
+                 :RequestGroup {:resource_elements {},
+                                :search_parameters {}},
+                 :Provenance {:resource_elements {},
+                              :search_parameters {}},
+                 :MedicinalProduct {:resource_elements {},
+                                    :search_parameters {}},
+                 :ChargeItemDefinition {:resource_elements {},
+                                        :search_parameters {}},
+                 :Practitioner {:resource_elements {},
+                                :search_parameters {}},
+                 :MedicinalProductPackaged {:resource_elements {},
+                                            :search_parameters {}},
+                 :Flag {:resource_elements {}, :search_parameters {}},
+                 :ExplanationOfBenefit {:resource_elements {},
+                                        :search_parameters {}},
+                 :Linkage {:resource_elements {},
+                           :search_parameters {}},
+                 :OperationOutcome {:resource_elements {},
+                                    :search_parameters {}},
+                 :MedicinalProductPharmaceutical {:resource_elements {},
+                                                  :search_parameters {}},
+                 :Immunization {:resource_elements {},
+                                :search_parameters {}},
+                 :MedicationKnowledge {:resource_elements {},
+                                       :search_parameters {}},
+                 :ResearchSubject {:resource_elements {},
+                                   :search_parameters {}},
+                 :MedicinalProductIndication {:resource_elements {},
+                                              :search_parameters {}},
+                 :PaymentNotice {:resource_elements {},
+                                 :search_parameters {}},
+                 :NamingSystem {:resource_elements {},
+                                :search_parameters {}},
+                 :MedicationStatement {:resource_elements {},
+                                       :search_parameters {}},
+                 :EnrollmentResponse {:resource_elements {},
+                                      :search_parameters {}},
+                 :NutritionOrder {:resource_elements {},
+                                  :search_parameters {}},
+                 :Questionnaire {:resource_elements {},
+                                 :search_parameters {}},
+                 :Account {:resource_elements {},
+                           :search_parameters {}},
+                 :EventDefinition {:resource_elements {},
+                                   :search_parameters {}},
+                 :MedicinalProductUndesirableEffect {:resource_elements {},
+                                                     :search_parameters {}},
+                 :SubstanceSpecification {:resource_elements {},
+                                          :search_parameters {}},
+                 :CommunicationRequest {:resource_elements {},
+                                        :search_parameters {}},
+                 :SpecimenDefinition {:resource_elements {},
+                                      :search_parameters {}},
+                 :VerificationResult {:resource_elements {},
+                                      :search_parameters {}},
+                 :DocumentManifest {:resource_elements {},
+                                    :search_parameters {}},
+                 :Task {:resource_elements {}, :search_parameters {}},
+                 :RiskEvidenceSynthesis {:resource_elements {},
+                                         :search_parameters {}},
+                 :ValueSet {:resource_elements {},
+                            :search_parameters {}},
+                 :Claim {:resource_elements {}, :search_parameters {}},
+                 :InsurancePlan {:resource_elements {},
+                                 :search_parameters {}},
+                 :ExampleScenario {:resource_elements {},
+                                   :search_parameters {}},
+                 :ResearchStudy {:resource_elements {},
+                                 :search_parameters {}},
+                 :MedicationRequest {:resource_elements {},
+                                     :search_parameters {}},
+                 :Measure {:resource_elements {},
+                           :search_parameters {}},
+                 :List {:resource_elements {}, :search_parameters {}},
+                 :Encounter {:resource_elements {},
+                             :search_parameters {}},
+                 :CapabilityStatement {:resource_elements {},
+                                       :search_parameters {}},
+                 :VisionPrescription {:resource_elements {},
+                                      :search_parameters {}},
+                 :RiskAssessment {:resource_elements {},
+                                  :search_parameters {}},
+                 :SubstanceProtein {:resource_elements {},
+                                    :search_parameters {}},
+                 :ImmunizationRecommendation {:resource_elements {},
+                                              :search_parameters {}},
+                 :RelatedPerson {:resource_elements {},
+                                 :search_parameters {}},
+                 :Medication {:resource_elements {},
+                              :search_parameters {}},
+                 :AppointmentResponse {:resource_elements {},
+                                       :search_parameters {}},
+                 :ResearchElementDefinition {:resource_elements {},
+                                             :search_parameters {}},
+                 :Substance {:resource_elements {},
+                             :search_parameters {}},
+                 :PaymentReconciliation {:resource_elements {},
+                                         :search_parameters {}},
+                 :TestScript {:resource_elements {},
+                              :search_parameters {}},
+                 :ConceptMap {:resource_elements {},
+                              :search_parameters {}},
+                 :Person {:resource_elements {},
+                          :search_parameters {}},
+                 :Condition {:resource_elements {},
+                             :search_parameters {}},
+                 :CareTeam {:resource_elements {},
+                            :search_parameters {}},
+                 :CatalogEntry {:resource_elements {},
+                                :search_parameters {}},
+                 :StructureDefinition {:resource_elements {},
+                                       :search_parameters {}},
+                 :Procedure {:resource_elements {},
+                             :search_parameters {}},
+                 :Consent {:resource_elements {},
+                           :search_parameters {}},
+                 :ObservationDefinition {:resource_elements {},
+                                         :search_parameters {}},
+                 :Location {:resource_elements {},
+                            :search_parameters {}},
+                 :Organization {:resource_elements {},
+                                :search_parameters {}},
+                 :Device {:resource_elements {},
+                          :search_parameters {}},
+                 :SupplyRequest {:resource_elements {},
+                                 :search_parameters {}},
+                 :AllergyIntolerance {:resource_elements {},
+                                      :search_parameters {}},
+                 :SearchParameter {:resource_elements {},
+                                   :search_parameters {}},
+                 :ResearchDefinition {:resource_elements {},
+                                      :search_parameters {}},
+                 :OperationDefinition {:resource_elements {},
+                                       :search_parameters {}},
+                 :MedicinalProductManufactured {:resource_elements {},
+                                                :search_parameters {}},
+                 :ImagingStudy {:resource_elements {},
+                                :search_parameters {}},
+                 :CoverageEligibilityRequest {:resource_elements {},
+                                              :search_parameters {}},
+                 :MedicinalProductIngredient {:resource_elements {},
+                                              :search_parameters {}},
+                 :GuidanceResponse {:resource_elements {},
+                                    :search_parameters {}},
+                 :Media {:resource_elements {}, :search_parameters {}},
+                 :MeasureReport {:resource_elements {},
+                                 :search_parameters {}},
+                 :GraphDefinition {:resource_elements {},
+                                   :search_parameters {}},
+                 :TerminologyCapabilities {:resource_elements {},
+                                           :search_parameters {}}}}
