@@ -1,4 +1,4 @@
-(ns app.rest.migration.search-param
+(ns app.migration.search-param
   (:require [cheshire.core   :as json]
             [app.rest.utils  :as u]
             [clojure.java.io :as io]
