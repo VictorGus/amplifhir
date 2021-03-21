@@ -4,10 +4,14 @@
             [clojure.java.io :as io]
             [clojure.string  :as str]))
 
+;;make parser smarter
 (defn parse-expression [exp]
   (map
-   #(str/split % #"\.")
-   (str/split (str/trim exp) #"\ | ")))
+   #(filter
+     (fn [i]
+       (not (str/includes? i "where")))
+     (str/split (str/trim %) #"\."))
+   (str/split exp #"\|")))
 
 (defn trim-resource-type [exp-as-array]
   (rest (map keyword exp-as-array)))
@@ -42,8 +46,12 @@
 
 (comment
 
-  (expression->array "Patient" "Patient.address | Person.address | Practitioner.address | RelatedPerson.address")
+  (expression->array "CarePlan" "CarePlan.subject.where(resolve() is Patient)")
 
   (save-to-resources "https://www.hl7.org/fhir/search-parameters.json" (io/resource "fhir2.edn") (u/edn-resource->map "fhir.edn"))
+
+  (u/edn-resource->map "fhir2.edn")
+
+  (parse-expression "CarePlan.subject.where(resolve() is Patient)")
 
   )
