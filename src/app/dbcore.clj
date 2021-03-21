@@ -145,13 +145,13 @@
 
   (mg-col/update @db-connection "Patient" {:_id "f7188e01-7eaf-4aa8-888c-8e496e41e608"} {mg-ops/$set {:name "Foobar"}})
 
-  (search db-connection "Patient" {})
+  (search db-connection "Migration" {})
 
   (drop-index db-connection "Patient")
 
   (delete-by-id db-connection :documents "123567")
 
-  (search-by-id db-connection :test "123")
+  (search-by-id db-connection :Patient "f7188e01-7eaf-4aa8-888c-8e496e41e608")
 
   (create db-connection "Patient" {:_id 1234
                                    :resourceType "Patient"})

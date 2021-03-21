@@ -6,17 +6,18 @@
             [ring.middleware.cors   :refer [wrap-cors]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.json   :refer [wrap-json-response wrap-json-body]]
-            [app.dbcore         :as db]
-            [app.actions        :as action]
-            [app.manifest       :as manifest]
-            [app.rest.operation :as op]
-            [app.rest.error     :as error]
-            [app.rest.utils     :as u]
-            [app.context        :as context]
-            [org.httpkit.server :as server]
-            [clojure.string     :as str]
-            [app.fhir.operations]
-            )
+            [app.dbcore           :as db]
+            [app.actions          :as action]
+            [app.manifest         :as manifest]
+            [app.rest.operation   :as op]
+            [app.rest.error       :as error]
+            [app.rest.utils       :as u]
+            [app.context          :as context]
+            [app.migration.list   :as mg-l]
+            [app.migration.runner :as mg-r]
+            [org.httpkit.server   :as server]
+            [clojure.string       :as str]
+            [app.fhir.operations])
   (:gen-class))
 
 (defn routes [ctx]
@@ -38,8 +39,7 @@
   [{meth :request-method hs :headers :as req}]
   (let [headers (get hs "access-control-request-headers")
         origin (get hs "origin")
-        meth  (get hs "access-control-request-method")]
-    {:status 200
+        meth  (get hs "access-control-request-method")] {:status 200
      :headers {"Access-Control-Allow-Headers" headers
                "Access-Control-Allow-Methods" meth
                "Access-Control-Allow-Origin" origin
@@ -82,14 +82,20 @@
     (@state :timeout 100)
     (reset! state nil)))
 
+(defn prepare-ctx []
+  (let [db-connection db/db-connection]
+    (swap! context/global-context assoc :db/connection db-connection)
+    (swap! context/global-context
+           #(merge % {:api (merge-with merge
+                                       {}
+                                       (app.fhir.operations/shape-up-routes @context/global-context))
+                      :migrations mg-l/migrations}
+                   #_(dissoc (:app manifest/app-config) :port)))))
+
 (defn start-server []
-  (let [db-connection db/db-connection
-        _ (swap! context/global-context assoc :db/connection db-connection)
-        app* (app (swap! context/global-context
-                         #(merge % {:api (merge-with merge
-                                                     {}
-                                                     (app.fhir.operations/shape-up-routes @context/global-context))}
-                                 (dissoc (:app manifest/app-config) :port))))]
+  (let [ctx* (prepare-ctx)
+        app* (app (prepare-ctx))]
+    (mg-r/run-migrations ctx*)
     (reset! state (server/run-server app* {:port 9090}))))
 
 (defn restart-server [] (stop-server) (start-server))
