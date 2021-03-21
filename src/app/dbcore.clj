@@ -118,6 +118,9 @@
   ([db collection index-name]
    (mg-col/drop-index @db collection index-name)))
 
+(defn ensure-index [db collection keys opts]
+  (mg-col/ensure-index @db-connection collection (array-map :name "text") {:name "patient_name_text"}))
+
 (defn delete [db collection query]
   (mg-col/remove @db collection query))
 
@@ -137,11 +140,11 @@
 
   (mg-col/count @db-connection "documents")
 
-  (mg-col/find-maps @db-connection "Patient" {mg-ops/$text {mg-ops/$search "Foobar"}})
+  (mg-col/find-maps @db-connection "Patient" {mg-ops/$text {mg-ops/$search "Test"}})
 
   (mg-col/indexes-on @db-connection "Patient")
 
-  (mg-col/ensure-index @db-connection :Patient (array-map :name "text") {:name "patient_name_text"})
+  (mg-col/ensure-index @db-connection :Patient (array-map :name.given "text" :name.family "text") {:name "patient_name_text"})
 
   (mg-col/update @db-connection "Patient" {:_id "f7188e01-7eaf-4aa8-888c-8e496e41e608"} {mg-ops/$set {:name "Foobar"}})
 
@@ -152,6 +155,9 @@
   (delete-by-id db-connection :documents "123567")
 
   (search-by-id db-connection :Patient "f7188e01-7eaf-4aa8-888c-8e496e41e608")
+
+  (update-by-id db-connection :Patient "f7188e01-7eaf-4aa8-888c-8e496e41e608" {:set {:name {:given ["Given"]
+                                                                                            :family "Test"}}})
 
   (create db-connection "Patient" {:_id 1234
                                    :resourceType "Patient"})

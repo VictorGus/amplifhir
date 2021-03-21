@@ -1,6 +1,7 @@
 (ns app.migration.search-param
   (:require [cheshire.core   :as json]
             [app.rest.utils  :as u]
+            [app.db.core     :as db]
             [clojure.java.io :as io]
             [clojure.string  :as str]))
 
@@ -44,14 +45,15 @@
              edn-f
              (:entities edn-f)))))
 
+(defn text-index-migration [{conn :db/connection :as ctx}]
+  #_(db/ensure-index conn ))
+
 (comment
 
   (expression->array "CarePlan" "CarePlan.subject.where(resolve() is Patient)")
 
   (save-to-resources "https://www.hl7.org/fhir/search-parameters.json" (io/resource "fhir2.edn") (u/edn-resource->map "fhir.edn"))
 
-  (u/edn-resource->map "fhir2.edn")
-
   (parse-expression "CarePlan.subject.where(resolve() is Patient)")
 
-  )
+)

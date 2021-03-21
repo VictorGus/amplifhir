@@ -51,20 +51,20 @@
    :language    mg-ops/$language
    :natural     mg-ops/$natural})
 
-(defn get-operator [k]
+(defn- get-operator [k]
   (k operators-dictionary))
 
-(defn create-client [user password dbname]
+(defn- create-client [user password dbname]
   (mg-cred/create user dbname (.toCharArray password)))
 
-(defn create-connection [{{:keys [host port user dbname password]} :db :as config}]
+(defn- create-connection [{{:keys [host port user dbname password]} :db :as config}]
   (let [client (create-client user password dbname)]
     (mg/connect-with-credentials host port client)))
 
-(defn extract-db [connection dbname]
+(defn- extract-db [connection dbname]
   (mg/get-db connection dbname))
 
-(defn enrich-object [object]
+(defn- enrich-object [object]
   (clojure.walk/postwalk (fn [k]
                            (if (keyword? k)
                              (if-let [op (get-operator k)]
@@ -73,7 +73,7 @@
                              k))
                          object))
 
-(defn get-connection [{{:keys [dbname]} :db :as config}]
+(defn- get-connection [{{:keys [dbname]} :db :as config}]
   (let [connection (create-connection config)
         db (extract-db connection dbname)]
     db))
@@ -122,6 +122,9 @@
 
 (defn delete-by-id [db collection id]
   (mg-col/remove-by-id @db collection id))
+
+(defn ensure-index [db collection keys opts]
+  (mg-col/ensure-index @db-connection collection (array-map :name "text") {:name "patient_name_text"}))
 
 (def updated-existing? mg-res/updated-existing?)
 
