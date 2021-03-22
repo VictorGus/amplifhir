@@ -10,7 +10,14 @@
   (map
    #(filter
      (fn [i]
-       (not (str/includes? i "where")))
+       (not (or (str/includes? i "where")
+                (str/includes? i "exists")
+                (str/includes? i "!=")
+                (str/includes? i "false")
+                (str/includes? i "entry[0]")
+                (str/includes? i " as ")
+                (str/includes? i "as(")
+                )))
      (str/split (str/trim %) #"\."))
    (str/split exp #"\|")))
 
@@ -24,9 +31,10 @@
   (->> exp
        parse-expression
        (trim-non-related-resources rt)
-       trim-resource-type))
+       trim-resource-type
+       vec))
 
-(defn save-to-resources [sp-bundle-path f edn-f]
+(defn- save-to-resources [sp-bundle-path f edn-f]
   (let [sp-bundle (-> sp-bundle-path slurp (json/parse-string true))]
     (spit f (reduce
              (fn [acc k]
@@ -45,8 +53,20 @@
              edn-f
              (:entities edn-f)))))
 
-(defn text-index-migration [{conn :db/connection :as ctx}]
-  #_(db/ensure-index conn ))
+(defn text-index-migration [{conn :db/connection {{resources :resources} :fhir} :modules :as ctx}]
+  (doseq [[rn rm] resources]
+    (let [sps  (:search_parameters rm)
+          exps (reduce-kv
+                (fn [acc k v]
+                  (println v)
+                  (let [exp (str/join "." (map name (:expression v)))]
+                    (if (and exp (-> exp str/blank? not))
+                      (assoc acc (keyword exp) "text")
+                      acc)))
+                {}
+                sps)]
+      (when (not-empty exps)
+        (db/ensure-index conn rn exps (str (name rn) "_text"))))))
 
 (comment
 
@@ -54,6 +74,9 @@
 
   (save-to-resources "https://www.hl7.org/fhir/search-parameters.json" (io/resource "fhir2.edn") (u/edn-resource->map "fhir.edn"))
 
-  (parse-expression "CarePlan.subject.where(resolve() is Patient)")
+  (u/edn-resource->map "fhir2.edn")
+
+  (parse-expression "DeviceRequest.code as Reference")
+
 
 )

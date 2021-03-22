@@ -1,5 +1,5 @@
-(ns app.migration.list)
+(ns app.migration.list
+  (:require [app.migration.search-param :as sp]))
 
 (def migrations
-  {:test (fn [ctx]
-           (println ctx))})
+  {:text-index sp/text-index-migration})

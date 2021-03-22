@@ -49,7 +49,8 @@
    :text        mg-ops/$text
    :search      mg-ops/$search
    :language    mg-ops/$language
-   :natural     mg-ops/$natural})
+   :natural     mg-ops/$natural
+   :currentDate mg-ops/$currentDate})
 
 (defn- get-operator [k]
   (k operators-dictionary))
@@ -123,8 +124,9 @@
 (defn delete-by-id [db collection id]
   (mg-col/remove-by-id @db collection id))
 
-(defn ensure-index [db collection keys opts]
-  (mg-col/ensure-index @db-connection collection (array-map :name "text") {:name "patient_name_text"}))
+(defn ensure-index [db collection keys name]
+  (println keys name)
+  (mg-col/ensure-index @db-connection collection keys {:name name}))
 
 (def updated-existing? mg-res/updated-existing?)
 
@@ -139,24 +141,30 @@
 
   (mg-col/count @db-connection "documents")
 
-  (mg-col/find-maps @db-connection "Patient" {mg-ops/$text {mg-ops/$search "Foobar"}})
+  (mg-col/find-maps @db-connection "Patient" {mg-ops/$text {mg-ops/$search "Given"}})
 
-  (mg-col/indexes-on @db-connection "Patient")
+  (mg-col/indexes-on @db-connection "Observation")
 
-  (mg-col/ensure-index @db-connection :Patient (array-map :name "text") {:name "patient_name_text"})
+  (mg-col/ensure-index @db-connection :Patient {:name "text" :name.family "text" :name.given "text"} {:name "patient_text"})
 
   (mg-col/update @db-connection "Patient" {:_id "f7188e01-7eaf-4aa8-888c-8e496e41e608"} {mg-ops/$set {:name "Foobar"}})
+
+  (mg-col/update @db-connection "Migration" {:_id "test"} {mg-ops/$currentDate {:test true}})
+
+  (update-by-id db-connection "Migration" "test" {:currentDate {:completedDateTime true}})
 
   (search db-connection "Migration" {})
 
   (drop-index db-connection "Patient")
 
-  (delete-by-id db-connection :documents "123567")
+  (delete-by-id db-connection :Migration "text-index")
 
   (search-by-id db-connection :Patient "f7188e01-7eaf-4aa8-888c-8e496e41e608")
 
   (create db-connection "Patient" {:_id 1234
                                    :resourceType "Patient"})
+
+
 
 
  )

@@ -85,12 +85,12 @@
 (defn prepare-ctx []
   (let [db-connection db/db-connection]
     (swap! context/global-context assoc :db/connection db-connection)
+    (swap! context/global-context #(merge % (dissoc (:app manifest/app-config) :port)))
     (swap! context/global-context
            #(merge % {:api (merge-with merge
                                        {}
                                        (app.fhir.operations/shape-up-routes @context/global-context))
-                      :migrations mg-l/migrations}
-                   #_(dissoc (:app manifest/app-config) :port)))))
+                      :migrations mg-l/migrations}))))
 
 (defn start-server []
   (let [ctx* (prepare-ctx)
