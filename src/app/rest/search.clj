@@ -30,7 +30,7 @@
                     :total (count q-res)
                     :entry q-res}})
           (let [error-msgs (map
-                            #(hash-map :diagnostics (str "No such search parameter - " (name rt) "." %)
+                            #(hash-map :diagnostics (str "No such search parameter - " (name rt) "." (name %))
                                        :error-type  :invalid-search-param)
                             unkwn)]
             (error/create-error error-msgs)))
