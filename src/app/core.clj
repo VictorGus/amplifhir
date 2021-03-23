@@ -32,8 +32,8 @@
     (if-let [res (rm/match [meth uri] (routes ctx))]
       ((:match res) (-> (assoc req :params (params-to-keyword (:params req)))
                         (update-in [:params] merge (:params res))))
-      (error/create-error {:error-type :not-found
-                           :diagnostics (str "Operation " (.toUpperCase (name meth)) " " uri " not found")}))))
+      (error/create-error [{:error-type :not-found
+                            :diagnostics (str "Operation " (.toUpperCase (name meth)) " " uri " not found")}]))))
 
 (defn preflight
   [{meth :request-method hs :headers :as req}]
