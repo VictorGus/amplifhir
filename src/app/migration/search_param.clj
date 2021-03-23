@@ -58,7 +58,6 @@
     (let [sps  (:search_parameters rm)
           exps (reduce-kv
                 (fn [acc k v]
-                  (println v)
                   (let [exp (str/join "." (map name (:expression v)))]
                     (if (and exp (-> exp str/blank? not))
                       (assoc acc (keyword exp) "text")

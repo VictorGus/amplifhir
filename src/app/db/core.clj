@@ -141,13 +141,15 @@
 
   (mg-col/count @db-connection "documents")
 
-  (mg-col/find-maps @db-connection "Patient" {mg-ops/$text {mg-ops/$search "Given"}})
+  (mg-col/find-maps @db-connection "Patient" {mg-ops/$text {mg-ops/$search "\"Given\" \"Test\""}})
+
+  (mg-col/find-maps @db-connection "Patient" {mg-ops/$text {mg-ops/$search "\"City\"\"Given\""}})
 
   (mg-col/indexes-on @db-connection "Observation")
 
   (mg-col/ensure-index @db-connection :Patient {:name "text" :name.family "text" :name.given "text"} {:name "patient_text"})
 
-  (mg-col/update @db-connection "Patient" {:_id "f7188e01-7eaf-4aa8-888c-8e496e41e608"} {mg-ops/$set {:name "Foobar"}})
+  (mg-col/update @db-connection "Patient" {:_id "f7188e01-7eaf-4aa8-888c-8e496e41e608"} {mg-ops/$set {:address [{:city "City"}]}})
 
   (mg-col/update @db-connection "Migration" {:_id "test"} {mg-ops/$currentDate {:test true}})
 
@@ -161,10 +163,7 @@
 
   (search-by-id db-connection :Patient "f7188e01-7eaf-4aa8-888c-8e496e41e608")
 
-  (create db-connection "Patient" {:_id 1234
+  (create db-connection "Patient" {:_id 123456
+                                   :name {:given ["Given"] :family "Foobar"}
                                    :resourceType "Patient"})
-
-
-
-
- )
+  )

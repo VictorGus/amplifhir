@@ -17,6 +17,10 @@
 
                         (= :not-found error-type)
                         {:code "not-found"
+                         :severity "error"}
+
+                        (= :invalid-search-param error-type)
+                        {:code "invalid"
                          :severity "error"})]
     {:issue [(merge resource-body (into {} (filter second {:diagnostic diagnostics
                                                            :location   "TODO"
