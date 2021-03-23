@@ -4,8 +4,7 @@
 (defn make-operation-outcome [errors]
   {:resourceType "OperationOutcome"
    :issue (mapv
-           (fn [{:keys [error-type sub-type diagnostics]}]
-             (println error-type sub-type diagnostics)
+           (fn [{:keys [error-type sub-type diagnostics]}] ;;Currently there is no usage for sub-type
              (let [resource-body (cond
                                    (= :invalid-resource error-type)
                                    {:code "invalid"
@@ -34,10 +33,11 @@
 (defn create-error [errors]
   (let [{:keys [error-type]} (last errors)
         status (case error-type
-                 :unauthorized     401
-                 :forbidden        403
-                 :invalid-resource 422
-                 :not-found        404)
+                 :unauthorized         401
+                 :forbidden            403
+                 :invalid-resource     422
+                 :invalid-search-param 422
+                 :not-found            404)
         operation-outcome-resource (make-operation-outcome errors)]
     {:status status
      :body operation-outcome-resource}))

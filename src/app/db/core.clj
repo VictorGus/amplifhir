@@ -91,7 +91,8 @@
   (mg-col/insert-batch @db collection objects))
 
 (defn search [db collection query]
-  (mg-col/find-maps @db collection query))
+  (let [query* (enrich-object query)]
+    (mg-col/find-maps @db collection query*)))
 
 (defn search-by-id [db collection id]
   (mg-col/find-map-by-id @db collection id))
@@ -155,7 +156,8 @@
 
   (update-by-id db-connection "Migration" "test" {:currentDate {:completedDateTime true}})
 
-  (search db-connection "Migration" {})
+  (search db-connection "Patient" {})
+
 
   (drop-index db-connection "Patient")
 
@@ -163,7 +165,9 @@
 
   (search-by-id db-connection :Patient "f7188e01-7eaf-4aa8-888c-8e496e41e608")
 
-  (create db-connection "Patient" {:_id 123456
-                                   :name {:given ["Given"] :family "Foobar"}
+  (create db-connection "Patient" {:_id 1234567
+                                   :name {:given ["Given1"] :family "Foobar1"}
                                    :resourceType "Patient"})
+
+
   )

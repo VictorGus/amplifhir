@@ -42,6 +42,11 @@
         ctx*    (assoc ctx :entity rt)]
     (op/create-operation op-name (crud/patch-resource ctx*) acc)))
 
+(defmethod inject-operation :search [_ rt ctx acc]
+  (let [op-name (to-op-name :search rt)
+        ctx*    (assoc ctx :entity rt)]
+    (op/create-operation op-name (crud/search-resource ctx*) acc)))
+
 (defn shape-up-handlers [ctx rs]
   (reduce (fn [acc r]
             (->> acc
@@ -50,6 +55,7 @@
                  (inject-operation :delete r ctx)
                  (inject-operation :update r ctx)
                  (inject-operation :patch  r ctx)
+                 (inject-operation :search r ctx)
                  ))
           {}
           rs))
@@ -60,7 +66,8 @@
         create-op (to-op-name :create rt)
         delete-op (to-op-name :delete rt)
         update-op (to-op-name :update rt)
-        patch-op  (to-op-name :patch rt)]
+        patch-op  (to-op-name :patch  rt)
+        search-op (to-op-name :search rt)]
     {read-op   {:method :GET
                 :path [(name rt) [:id]]}
      create-op {:method :POST
@@ -71,6 +78,8 @@
                 :path [(name rt) [:id]]}
      patch-op  {:method :PATCH
                 :path [(name rt) [:id]]}
+     search-op {:method :GET
+                :path [(name rt)]}
      }))
 
 (defn shape-up-routes [{{{e_l :entities_list} :fhir} :modules :as ctx}]

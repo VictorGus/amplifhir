@@ -1,7 +1,8 @@
 (ns app.rest.crud
-  (:require [app.dbcore     :as db]
-            [app.rest.utils :as u]
-            [app.rest.error :as error]))
+  (:require [app.dbcore      :as db]
+            [app.rest.utils  :as u]
+            [app.rest.search :as search]
+            [app.rest.error  :as error]))
 
 (defn read-by-id [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [params] :as request}]
@@ -55,6 +56,4 @@
         {:body (error/create-error [{:error-type :not-found}])
          :status 404}))))
 
-(defn search-resource [{conn :db/connection rt :entity :as ctx}]
-  (fn [{:keys [params] :as request}]
-    ))
+(def search-resource search/search)
