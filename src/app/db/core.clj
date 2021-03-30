@@ -156,12 +156,13 @@
 
   (update-by-id db-connection "Migration" "test" {:currentDate {:completedDateTime true}})
 
-  (search db-connection "Patient" {})
+  (search-by-id db-connection "Patient" 123456)
 
+  (search db-connection "Patient_history" {:id "579027f4-bba1-4bfb-8767-711b22d45017"})
 
   (drop-index db-connection "Patient")
 
-  (delete-by-id db-connection :Migration "text-index")
+  (delete-by-id db-connection :Migration 1234567)
 
   (search-by-id db-connection :Patient "f7188e01-7eaf-4aa8-888c-8e496e41e608")
 

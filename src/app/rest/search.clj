@@ -20,7 +20,6 @@
 (defn search [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [params] :as request}]
     (let [unkwn (get-unknown-params ctx params rt)]
-      (println params)
       (if (not-empty params)
         (if (empty? unkwn)
           (let [q-str (build-query params)
