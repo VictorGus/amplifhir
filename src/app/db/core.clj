@@ -50,7 +50,8 @@
    :search      mg-ops/$search
    :language    mg-ops/$language
    :natural     mg-ops/$natural
-   :currentDate mg-ops/$currentDate})
+   :currentDate mg-ops/$currentDate
+   :count       mg-ops/$count})
 
 (defn- get-operator [k]
   (k operators-dictionary))
@@ -126,8 +127,14 @@
   (mg-col/remove-by-id @db collection id))
 
 (defn ensure-index [db collection keys name]
-  (println keys name)
-  (mg-col/ensure-index @db-connection collection keys {:name name}))
+  (mg-col/ensure-index @db keys {:name name}))
+
+(defn count-documents
+  ([db collection]
+   (mg-col/count @db collection))
+  ([db collection query]
+   (let [query* (enrich-object query)]
+     (mg-col/count @db collection query*))))
 
 (def updated-existing? mg-res/updated-existing?)
 
@@ -141,6 +148,8 @@
                                                         :_id "123"})
 
   (mg-col/count @db-connection "documents")
+
+  (mg-col/find-maps @db-connection "Patient" {mg-ops/$text {mg-ops/$search "\"Given\" \"Test\""}})
 
   (mg-col/find-maps @db-connection "Patient" {mg-ops/$text {mg-ops/$search "\"Given\" \"Test\""}})
 
@@ -158,7 +167,7 @@
 
   (search-by-id db-connection "Patient" 123456)
 
-  (search db-connection "Patient_history" {:id "579027f4-bba1-4bfb-8767-711b22d45017"})
+  (count-documents db-connection "Patient_history" {:id "579027f4-bba1-4bfb-8767-711b22d45017"})
 
   (drop-index db-connection "Patient")
 
@@ -169,6 +178,8 @@
   (create db-connection "Patient" {:_id 1234567
                                    :name {:given ["Given1"] :family "Foobar1"}
                                    :resourceType "Patient"})
+
+  (apply count-documents [db-connection "Patient_history" {:id "579027f4-bba1-4bfb-8767-711b22d45017"}])
 
 
   )
