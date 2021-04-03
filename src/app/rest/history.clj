@@ -14,9 +14,11 @@
 
 (defn get-history [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [params] :as request}]
-    (let [id    (:id params)
-          q-res (db/search conn (->history-collection rt) {:id id})]
+    (let [id       (:id params)
+          args-vec [conn (->history-collection rt) {:id id}]
+          total    (apply db/count-documents args-vec)
+          q-res    (apply db/search          args-vec)]
       {:status 200
        :body {:resourceType "Bundle"
-              :total (count q-res)
+              :total total
               :entry q-res}})))

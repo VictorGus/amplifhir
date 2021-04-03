@@ -1,5 +1,5 @@
 (ns app.rest.crud
-  (:require [app.dbcore       :as db]
+  (:require [app.db.core      :as db]
             [app.rest.utils   :as u]
             [app.rest.search  :as search]
             [app.rest.error   :as error]
