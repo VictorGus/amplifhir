@@ -6,6 +6,7 @@
          org.clojure/core.async      {:mvn/version "1.1.587"}
          hikari-cp                   {:mvn/version "2.10.0"}
          http-kit                    {:mvn/version "2.3.0"}
+         metosin/scjsv               {:mvn/version "0.6.2"}
          com.novemberain/monger      {:mvn/version "3.5.0"}
          clj-http                    {:mvn/version "3.10.1"}
          clj-jwt                     {:mvn/version "0.1.1"}
