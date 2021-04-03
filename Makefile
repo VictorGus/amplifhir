@@ -1,6 +1,6 @@
 SHELL = bash
 
-MONGO_IMAGE ?= mongo
+MONGO_IMAGE ?= mongo:latest
 MONGO_PORT  ?= 27017
 MONGO_DATABASE ?= amplifhir-db
 MONGO_USER ?= root
