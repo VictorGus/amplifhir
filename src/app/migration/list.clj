@@ -1,5 +1,7 @@
 (ns app.migration.list
-  (:require [app.migration.search-param :as sp]))
+  (:require [app.migration.search-param]
+            [app.fhir.validation]))
 
 (def migrations
-  {:text-index sp/text-index-migration})
+  {:text-index         app.migration.search-param/text-index-migration
+   :validation-schemas app.fhir.validation/schemas-migration})
