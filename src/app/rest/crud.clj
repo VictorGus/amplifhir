@@ -17,8 +17,8 @@
 (defn create-resource [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [body] :as request}]
     (let [id (u/generate-uuid)]
-      (if-let [q-res (db/create conn rt (merge body {:_id id
-                                                     :resourceType rt}))]
+      (if-let [q-res (db/create conn rt (assoc {:_id id
+                                                :resourceType rt} :resource body))]
         (do
           (history/log-to-history ctx :create (merge body {:_id id}))
           {:body q-res
@@ -36,7 +36,7 @@
 ;;TODO add validation
 (defn update-resource [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [body params] :as request}]
-    (let [q-res    (db/update-by-id conn rt (:id params) (assoc body :resourceType (name rt)) {:upsert true})
+    (let [q-res    (db/update-by-id conn rt (:id params) (merge {:resource body} {:resourceType (name rt)}) {:upsert true})
           resource (db/search-by-id conn rt (:id params))]
       (cond
         (db/updated-existing? q-res)
@@ -58,7 +58,7 @@
 ;;TODO add validation
 (defn patch-resource [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [body params] :as request}]
-    (let [q-res    (db/update-by-id conn rt (:id params) {:set body})
+    (let [q-res    (db/update-by-id conn rt (:id params) {:set {:resource body}})
           resource (db/search-by-id conn rt (:id params))]
       (if (db/acknowledged? q-res)
         {:body resource
