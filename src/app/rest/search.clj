@@ -19,6 +19,7 @@
 
 (defn search [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [params] :as request}]
+    (clojure.pprint/pprint request)
     (let [unkwn (get-unknown-params ctx params rt)]
       (if (not-empty params)
         (if (empty? unkwn)

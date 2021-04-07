@@ -3,5 +3,4 @@
             [app.fhir.validation]))
 
 (def migrations
-  {:text-index         app.migration.search-param/text-index-migration
-   :validation-schemas app.fhir.validation/schemas-migration})
+  {:text-index         app.migration.search-param/text-index-migration})

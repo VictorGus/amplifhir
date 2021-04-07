@@ -14,6 +14,9 @@
             [app.context          :as context]
             [app.migration.list   :as mg-l]
             [app.migration.runner :as mg-r]
+            [app.fhir.validation  :as validation]
+            [app.hook.core        :as hook]
+            [app.hook.list        :as hook-list]
             [org.httpkit.server   :as server]
             [clojure.string       :as str]
             [app.fhir.operations])
@@ -89,12 +92,16 @@
            #(merge % {:api (merge-with merge
                                        {}
                                        (app.fhir.operations/shape-up-routes @context/global-context))
-                      :migrations mg-l/migrations}))))
+                      :migrations mg-l/migrations}))
+    (swap! context/global-context (fn [c]
+                                    (update-in c [:validation :json_schema] #(json/parse-string % true))))
+    (swap! context/global-context validation/compile-schema-to-ctx)))
 
 (defn start-server []
   (let [ctx* (prepare-ctx)
         app* (app (prepare-ctx))]
     (mg-r/run-migrations ctx*)
+    (hook/append-hooks hook-list/hooks)
     (reset! state (server/run-server app* {:port 9090}))))
 
 (defn restart-server [] (stop-server) (start-server))

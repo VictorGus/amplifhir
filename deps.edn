@@ -15,9 +15,10 @@
          ring                        {:mvn/version "1.7.1"}
          ring/ring-defaults          {:mvn/version "0.3.2"}
          ring-cors                   {:mvn/version "0.1.13"}
-         honeysql                    {:mvn/version "0.9.8"}
          ring/ring-mock              {:mvn/version "0.4.0"}
+         honeysql                    {:mvn/version "0.9.8"}
          route-map                   {:mvn/version "0.0.7-RC4"}
+         json-schema/json-schema     {:mvn/version "0.2.0-RC11"}
          cheshire                    {:mvn/version "5.9.0"}}
 
  :aliases

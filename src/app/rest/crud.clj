@@ -3,7 +3,8 @@
             [app.rest.utils   :as u]
             [app.rest.search  :as search]
             [app.rest.error   :as error]
-            [app.rest.history :as history]))
+            [app.rest.history :as history]
+            [app.hook.core    :as hook]))
 
 (defn read-by-id [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [params] :as request}]
@@ -17,6 +18,7 @@
 (defn create-resource [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [body] :as request}]
     (let [id (u/generate-uuid)]
+      (hook/call-hooks request (assoc ctx :operation :create))
       (if-let [q-res (db/create conn rt (assoc {:_id id
                                                 :resourceType rt} :resource body))]
         (do
@@ -36,6 +38,7 @@
 ;;TODO add validation
 (defn update-resource [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [body params] :as request}]
+    (hook/call-hooks request (assoc ctx :operation :update))
     (let [q-res    (db/update-by-id conn rt (:id params) (merge {:resource body} {:resourceType (name rt)}) {:upsert true})
           resource (db/search-by-id conn rt (:id params))]
       (cond
@@ -58,6 +61,7 @@
 ;;TODO add validation
 (defn patch-resource [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [body params] :as request}]
+    (hook/call-hooks request (assoc ctx :operation :update))
     (let [q-res    (db/update-by-id conn rt (:id params) {:set {:resource body}})
           resource (db/search-by-id conn rt (:id params))]
       (if (db/acknowledged? q-res)
