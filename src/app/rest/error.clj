@@ -4,7 +4,7 @@
 (defn make-operation-outcome [errors]
   {:resourceType "OperationOutcome"
    :issue (mapv
-           (fn [{:keys [error-type sub-type diagnostics]}] ;;Currently there is no usage for sub-type
+           (fn [{:keys [error-type sub-type diagnostics expression]}] ;;Currently there is no usage for sub-type
              (let [resource-body (cond
                                    (= :invalid-resource error-type)
                                    {:code "invalid"
@@ -25,9 +25,10 @@
                                    (= :invalid-search-param error-type)
                                    {:code "invalid"
                                     :severity "error"})]
-               (merge resource-body (into {} (filter second {:diagnostic diagnostics
-                                                             :location   "TODO"
-                                                             :expression "TODO"})))))
+               (merge resource-body (into {} (filter second (cond-> {:diagnostics diagnostics
+                                                                     :location   "TODO"}
+                                                              expression
+                                                              (assoc :expression expression)))))))
            errors)})
 
 (defn create-error [errors]
