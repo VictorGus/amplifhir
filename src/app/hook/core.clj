@@ -54,8 +54,10 @@
           (and (and (vector? resources)
                     ((set resources) entity)) (and (vector? operations)
                                                    ((set operations) operation))))
-       (conj acc (handler req ctx))
-       acc))
+       (let [errors (handler ctx req)]
+         (when errors
+           (reduced errors)))
+       nil))
    []
    (get-hooks)))
 
@@ -96,5 +98,12 @@
  :server-name "localhost",
  :scheme :http,
  :request-method :get}
+
+(reduce-kv (fn [acc k v]
+             (if (= :error v)
+               (reduced {k v})
+               acc))
+        []
+        {:a 2 :b 3 :g :error})
 
   )
