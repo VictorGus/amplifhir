@@ -41,7 +41,8 @@
   [{meth :request-method hs :headers :as req}]
   (let [headers (get hs "access-control-request-headers")
         origin (get hs "origin")
-        meth  (get hs "access-control-request-method")] {:status 200
+        meth  (get hs "access-control-request-method")]
+    {:status 200
      :headers {"Access-Control-Allow-Headers" headers
                "Access-Control-Allow-Methods" meth
                "Access-Control-Allow-Origin" origin
@@ -88,14 +89,15 @@
   (let [db-connection db/db-connection]
     (swap! context/global-context assoc :db/connection db-connection)
     (swap! context/global-context #(merge % (dissoc (:app manifest/app-config) :port)))
+    (swap! context/global-context (fn [c]
+                                    (update-in c [:validation :json_schema] #(json/parse-string % true))))
+    (swap! context/global-context validation/compile-schema-to-ctx)
     (swap! context/global-context
            #(merge % {:api (merge-with merge
                                        {}
                                        (app.fhir.operations/shape-up-routes @context/global-context))
                       :migrations mg-l/migrations}))
-    (swap! context/global-context (fn [c]
-                                    (update-in c [:validation :json_schema] #(json/parse-string % true))))
-    (swap! context/global-context validation/compile-schema-to-ctx)))
+    ))
 
 (defn start-server []
   (let [ctx* (prepare-ctx)
