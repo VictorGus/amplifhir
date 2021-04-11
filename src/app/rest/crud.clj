@@ -18,13 +18,14 @@
 (defn create-resource [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [body] :as request}]
     (let [id (u/generate-uuid)]
-      (hook/call-hooks request (assoc ctx :operation :create))
-      (if-let [q-res (db/create conn rt (assoc {:_id id
-                                                :resourceType rt} :resource body))]
-        (do
-          (history/log-to-history ctx :create (merge body {:_id id}))
-          {:body q-res
-           :status 201})))))
+      (if-let [err (hook/call-hooks request (assoc ctx :operation :create))]
+        err
+        (if-let [q-res (db/create conn rt (assoc {:_id id
+                                                  :resourceType rt} :resource body))]
+          (do
+            (history/log-to-history ctx :create (merge body {:_id id}))
+            {:body q-res
+             :status 201}))))))
 
 ;;TODO return OperationOutcome when no resource is found
 (defn delete-resource [{conn :db/connection rt :entity :as ctx}]
