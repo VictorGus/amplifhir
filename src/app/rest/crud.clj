@@ -8,6 +8,7 @@
 
 (defn read-by-id [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [params] :as request}]
+    (clojure.pprint/pprint request)
     (if-let [q-res (db/search-by-id conn rt (:id params))]
       {:body q-res
        :status 200}
@@ -17,11 +18,11 @@
 ;;TODO add validation
 (defn create-resource [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [body] :as request}]
-    (let [id (u/generate-uuid)]
+    (let [id (or (:_id body) (u/generate-uuid))]
       (if-let [err (hook/call-hooks request (assoc ctx :operation :create))]
         err
         (if-let [q-res (db/create conn rt (assoc {:_id id
-                                                  :resourceType rt} :resource body))]
+                                                  :resourceType rt} :resource (dissoc body :_id)))]
           (do
             (history/log-to-history ctx :create (merge body {:_id id}))
             {:body q-res
