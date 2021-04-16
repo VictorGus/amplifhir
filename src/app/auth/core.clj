@@ -17,31 +17,47 @@
     (e/base64-decode authorization)))
 
 (defmethod authenticate :basic [_ req {conn :db/connection :as ctx}]
-  (let [{:keys [authorization]} (u/headers-to-keywords (:headers req))
-        decoded-auth-string     (e/base64-decode authorization)
-        [client secret]         (str/split decoded-auth-string #":")]
-    (if-let [subj (first (db/search-by-id conn :Client client))]
-      (if (s/verify-secret secret subj)
-        (assoc (select-keys subj [:_id])
-               :permissions
-               (get-in subj [:resource :permissions]))
+  (let [{:keys [authorization]} (u/headers-to-keywords (:headers req))]
+    (let [decoded-auth-string     (e/base64-decode authorization)
+          [client secret]         (str/split decoded-auth-string #":")]
+      (if-let [subj (first (db/search-by-id conn :Client client))]
+        (if (s/verify-secret secret subj)
+          (assoc (select-keys subj [:_id])
+                 :permissions
+                 (get-in subj [:resource :permissions]))
+          {:status 401
+           :body {:message "Provided credentials are invalid"}})
         {:status 401
-         :body {:message "Provided credentials are invalid"}})
-      {:status 401
-       :body {:message (str "Client " client " not found")}})))
+         :body {:message (str "Client " client " not found")}}))))
 
-(defn authorize [permissions {:keys [request-method uri] :as req} {{:keys [entity]} :as ctx}]
-  (let []))
+(defn authorize [permissions {:keys [request-method uri] :as req}
+                 {:keys [entity modules operation] :as ctx}]
+  (if (= :superuser permissions)
+    :granted
+    (if (not-empty (s/verify-permissions permissions ctx))
+      :granted
+      {:status 403
+       :body {:message (str "Operation " (.toUpperCase (name request-method)) " " uri " is not permitted")}})))
 
 (defn get-access [req ctx]
-  (let [auth-res (authenticate (:headers req) req ctx)]
-    (if-let [permissions (:permissions auth-res)]
-      
-      auth-res)))
+  (if (:authorization (u/headers-to-keywords (:headers req)))
+    (let [auth-res (authenticate (:headers req) req ctx)]
+      (if-let [permissions (:permissions auth-res)]
+        (let [authorization-res (authorize permissions req ctx)]
+          (when-not (= :granted authorization-res)
+            authorization-res))
+        auth-res))
+    {:status 401
+     :body {:message "Unauthorized"}}))
 
 (comment
 
   ;;(filter approve-req permissions)
+  (filter
+   (s/verify-permissions [{:operations (map name [:create :read :update :delete])
+                           :entities   (map name [:Patient])}])
+   )
+
 
   ;;Client
   {:_id 123

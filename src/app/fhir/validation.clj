@@ -29,7 +29,6 @@
   (let [entity*  (name entity)
         resource (assoc (clojure.walk/keywordize-keys (:body req)) :resourceType entity*)
         result   (validate-resource ctx resource)]
-    (println resource)
     (when-let [errors (-> result :errors not-empty)]
       (let [errs* (map
                    #(hash-map :diagnostics (:message %)
