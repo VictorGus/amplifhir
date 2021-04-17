@@ -6,9 +6,13 @@
   (when-not (#{:Client :User "Client" "User"} t)
     (throw (new IllegalArgumentException (str "Unknown subject type " t)))))
 
-(defn verify-secret [secret {:keys [password salt] :as subj}]
+(defn enrich-password [salt password]
   (let [base64-encoded-salt (e/base64-encode salt)]
-    (= password (e/sha256 (str secret base64-encoded-salt)))))
+    (e/sha256 (str password base64-encoded-salt))))
+
+(defn verify-secret [secret {:keys [password salt] :as subj}]
+  (let [enriched-secret (enrich-password salt secret)]
+    (= password enriched-secret)))
 
 (defn verify-permissions [permissions {:keys [entity operation modules] :as ctx}]
   (filter
@@ -23,7 +27,10 @@
             (verify-entity (name entity) (:entities p)))))
    permissions))
 
-(verify-permissions [{:operations [:create :read :update :delete]
-                      :entities   :fhir  #_:fhir}] {:entity :Patient
-                                                    :modules {:fhir {:entities_list [:Patient :Observation :Chlenation :Huesutin]}}
-                                           :operation :update})
+(defn shape-super [password]
+  (let [salt (e/get-salt)]
+    {:_id "admin"
+     :permissions :superuser
+     :password (enrich-password salt password)
+     :salt salt}))
+
