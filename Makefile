@@ -16,6 +16,9 @@ MONGO_HOST ?= localhost
 repl:
 	clojure -A:test:nrepl -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]"
 
+ui-repl:
+	rm -rf .cpcache/ && rm -rf ui/.cpcache/ && DEBUG=true && cd ui && clojure -A:test:nrepl
+
 build:
 	clojure -A:build
 	mv target/app-1.0.0-SNAPSHOT-standalone.jar app.jar
