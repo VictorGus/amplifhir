@@ -58,7 +58,8 @@
 
 (defn handle-input-stream [{:keys [body]}]
   (if (and body
-           (instance? org.httpkit.BytesInputStream body))
+           (or (instance? org.httpkit.BytesInputStream body)
+               (instance? java.io.ByteArrayInputStream body)))
     (json/parse-string (slurp body) true)
     body))
 
@@ -85,31 +86,31 @@
     (@state :timeout 100)
     (reset! state nil)))
 
-(defn prepare-ctx []
-  (let [db-connection db/db-connection]
-    (swap! context/global-context assoc :db/connection db-connection)
-    (swap! context/global-context #(merge % (dissoc (:app manifest/app-config) :port)))
-    (swap! context/global-context (fn [c]
-                                    (update-in c [:validation :json_schema] #(json/parse-string % true))))
-    (swap! context/global-context validation/compile-schema-to-ctx)
-    (swap! context/global-context
-           #(merge % {:api (merge-with merge
-                                       {}
-                                       (app.fhir.operations/shape-up-routes @context/global-context))
-                      :migrations mg-l/migrations}))
-    ))
+(defn prepare-ctx [db-connection]
+  (swap! context/global-context assoc :db/connection db-connection)
+  (swap! context/global-context #(merge % (dissoc (:app manifest/app-config) :port)))
+  (swap! context/global-context (fn [c]
+                                  (update-in c [:validation :json_schema] #(json/parse-string % true))))
+  (swap! context/global-context validation/compile-schema-to-ctx)
+  (swap! context/global-context
+         #(merge % {:api (merge-with merge
+                                     {}
+                                     (app.fhir.operations/shape-up-routes @context/global-context))
+                    :migrations mg-l/migrations}))
+  (mg-r/run-migrations @context/global-context)
+  (hook/append-hooks hook-list/hooks)
+  @context/global-context)
 
-(defn start-server []
-  (let [ctx* (prepare-ctx)
-        app* (app (prepare-ctx))]
-    (mg-r/run-migrations ctx*)
-    (hook/append-hooks hook-list/hooks)
+(defn start-server [db-connection]
+  (let [ctx* (prepare-ctx db-connection)
+        app* (app ctx*)]
     (reset! state (server/run-server app* {:port 9090}))))
 
-(defn restart-server [] (stop-server) (start-server))
+
+(defn restart-server [] (stop-server) (start-server db/db-connection))
 
 (defn -main [& [_ _]]
-  (start-server)
+  (start-server db/db-connection)
   (println "Server started"))
 
 (comment
