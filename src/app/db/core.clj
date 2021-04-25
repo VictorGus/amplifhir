@@ -80,6 +80,8 @@
         db (extract-db connection dbname)]
     db))
 
+(def test-connection (delay (get-connection (clojure.core/update app-config :db #(merge % {:dbname "amplifhir-test"})))))
+
 (def db-connection (delay (get-connection app-config)))
 
 (defn truncate-collection [db collection]
@@ -136,6 +138,9 @@
    (let [query* (enrich-object query)]
      (mg-col/count @db collection query*))))
 
+(defn purge-colls [db cols]
+  (mg-col/purge-many @db cols))
+
 (def updated-existing? mg-res/updated-existing?)
 
 (def acknowledged? mg-res/acknowledged?)
@@ -165,21 +170,41 @@
 
   (update-by-id db-connection "Migration" "test" {:currentDate {:completedDateTime true}})
 
-  (search-by-id db-connection "Patient" 123456)
+  (search db-connection "Client" {"resource.permissions" "superuser"})
 
   (count-documents db-connection "Patient_history" {:id "579027f4-bba1-4bfb-8767-711b22d45017"})
 
   (drop-index db-connection "Patient")
 
-  (delete-by-id db-connection :Migration 1234567)
+  (truncate-collection db-connection "User")
+
+  (search test-connection :Migration {})
+
+  (delete-by-id test-connection :Migration "super-subjects")
 
   (search-by-id db-connection :Patient "f7188e01-7eaf-4aa8-888c-8e496e41e608")
 
-  (create db-connection "Patient" {:_id 1234567
-                                   :name {:given ["Given1"] :family "Foobar1"}
-                                   :resourceType "Patient"})
+  (try
+    (create db-connection "Patient" {:_id 12345678
+                                     :name {:given ["Given1"] :family "Foobar1"}
+                                     :resourceType "Patient"})
+    {:e "e"}
+    (catch com.mongodb.DuplicateKeyException e
+      {:status 409
+       :message "User already exists"}))
 
   (apply count-documents [db-connection "Patient_history" {:id "579027f4-bba1-4bfb-8767-711b22d45017"}])
+
+  (create db-connection :UserSession {:_id "123"
+                                         :resource {:user "test"
+                                                    :status "active"
+                                                    :access_token "ACCESS_TOKEN"}})
+
+  (truncate-collection db-connection :UserSession)
+
+  (search db-connection :UserSession {})
+
+  (update-by-id db-connection :UserSession "123" {:set {"resource.status" "stale"}})
 
 
   )
