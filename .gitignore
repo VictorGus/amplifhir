@@ -4,6 +4,8 @@ pom.xml.asc
 *.class
 /ui/resources/public/js
 /ui/build
+/ui/node_modules
+/ui/.shadow-cljs
 build.dev
 /lib/
 /classes/
