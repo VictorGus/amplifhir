@@ -4,7 +4,7 @@
             [matcho.core :as matcho]
             [clojure.test :refer :all]))
 
-(deftest verifyin-test
+(deftest verifying-test
   (testing "Verifying password test"
     (let [salt                    (app.auth.encrypt/get-salt)
           actual-encoded-password (app.auth.encrypt/sha256 (str "qweasdzxc" (app.auth.encrypt/base64-encode salt)))]
