@@ -13,15 +13,27 @@
 (defmulti authenticate (fn [headers _ _] (-> headers u/headers-to-keywords :authorization extract-auth-type)))
 
 (defmethod authenticate :bearer [_ req ctx]
-  (let [{:keys [authorization]} (u/headers-to-keywords (:headers req))]
-    (e/base64-decode authorization)))
+  (let [{:keys [authorization]} (u/headers-to-keywords (:headers req))
+        authorization* (str/replace authorization "Bearer " "")
+        decoded-auth   (e/base64-decode authorization*)
+        session        (s/find-active-session ctx decoded-auth)]
+    (if session
+      (if-let [user (s/find-user ctx session)]
+        (assoc (select-keys user [:_id])
+               :permissions
+               (get-in user [:resource :permissions]))
+        {:status 401
+         :body {:message (str "User" " doesn't exist")}})
+      {:status 401
+       :body {:message "Unauthorized"}})))
 
 (defmethod authenticate :basic [_ req {conn :db/connection :as ctx}]
-  (let [{:keys [authorization]} (u/headers-to-keywords (:headers req))]
-    (let [decoded-auth-string     (e/base64-decode authorization)
+  (let [{:keys [authorization]} (u/headers-to-keywords (:headers req))
+        authorization*          (str/replace authorization "Basic " "")]
+    (let [decoded-auth-string     (e/base64-decode authorization*)
           [client secret]         (str/split decoded-auth-string #":")]
-      (if-let [subj (first (db/search-by-id conn :Client client))]
-        (if (s/verify-secret secret subj)
+      (if-let [subj (db/search-by-id conn :Client client)]
+        (if (s/verify-secret secret (:resource subj))
           (assoc (select-keys subj [:_id])
                  :permissions
                  (get-in subj [:resource :permissions]))
@@ -32,7 +44,7 @@
 
 (defn authorize [permissions {:keys [request-method uri] :as req}
                  {:keys [entity modules operation] :as ctx}]
-  (if (= :superuser permissions)
+  (if (#{:superuser "superuser"} permissions)
     :granted
     (if (not-empty (s/verify-permissions permissions ctx))
       :granted
@@ -42,7 +54,7 @@
 (defn get-access [req ctx]
   (if (:authorization (u/headers-to-keywords (:headers req)))
     (let [auth-res (authenticate (:headers req) req ctx)]
-      (if-let [permissions (:permissions auth-res)]
+       (if-let [permissions (:permissions auth-res)]
         (let [authorization-res (authorize permissions req ctx)]
           (when-not (= :granted authorization-res)
             authorization-res))
@@ -58,7 +70,6 @@
                            :entities   (map name [:Patient])}])
    )
 
-
   ;;Client
   {:_id 123
    :name "Test"
@@ -72,6 +83,8 @@
    :password "sha256(base64encode(salt)+password)"
    :salt "plain-text-salt"
    :permissions :superuser}
+
+
 
 
   )
