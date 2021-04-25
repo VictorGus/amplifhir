@@ -11,4 +11,7 @@
                      :handler auth/auth-hook}
    :validation-hook {:trigger {:operations [:update :create]
                                :resources :fhir}
-                     :handler validation/validation-hook}))
+                     :handler validation/validation-hook}
+   :history-hook    {:trigger {:operations [:update :create :delete]
+                               :resources :fhir}
+                     :handler {}}))
