@@ -1,3 +1,3 @@
 (ns app.routes)
 
-(def routes {:. :app.patient.model/index})
+(def routes {:. :app.login.model/index})

@@ -1,0 +1,32 @@
+{:deps {:aliases [:ui :ui-dev]}
+
+ :nrepl {:port       7888
+         :middleware [refactor-nrepl.middleware/wrap-refactor]}
+
+ :fs-watch {:hawk false}
+
+ :builds
+ {:prod {:target     :browser
+         :output-dir "target/prod/js"
+         :release    {:compiler-options
+                      {:optimizations :advanced
+                       :infer-externs :auto
+                       :output-feature-set :es7}}
+         :modules    {:main {:entries [app.prod]}}}
+
+  :app {:target     :browser
+        :output-dir "resources/public/js"
+        :asset-path "/js"
+        :compiler-options
+        {:closure-defines
+         {"re_frame.trace.trace_enabled_QMARK_" true}
+         :output-feature-set :es7}
+
+        :devtools
+        {:http-root  "resources/public/"
+         :http-port  3449
+         ;; :after-load bridgemr.dev/reload!
+         :preloads   [re-frisk.preload]}
+        :modules {:main {:entries [app.dev]
+                         ;; :init-fn bridgemr.dev/init!
+                         }}}}}

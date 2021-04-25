@@ -8,8 +8,7 @@
             [app.routes :as routes]
             [app.pages :as pages]
             [app.layout :as layout]
-            [app.patient.crud.view]
-            [app.patient.view]))
+            [app.login.view]))
 
 (rf/reg-event-fx
  ::initialize
