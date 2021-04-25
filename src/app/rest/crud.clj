@@ -16,7 +16,6 @@
         (error/create-error [{:error-type :not-found
                               :diagnostics (str "Resource with id " (:id params) " not found")}])))))
 
-;;TODO add validation
 (defn create-resource [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [body] :as request}]
     (let [id (or (:_id body) (u/generate-uuid))]
@@ -40,7 +39,6 @@
             (history/log-to-history ctx :delete (dissoc body :resourceType))
             {:status 204}))))))
 
-;;TODO add validation
 (defn update-resource [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [body params] :as request}]
     (if-let [err (hook/call-hooks request (assoc ctx :operation :update))]
@@ -64,7 +62,6 @@
           {:body {:message "TODO validation"}
            :status 422})))))
 
-;;TODO add validation
 (defn patch-resource [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [body params] :as request}]
     (if-let [err (hook/call-hooks request (assoc ctx :operation :update))]

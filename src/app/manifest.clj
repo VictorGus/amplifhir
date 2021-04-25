@@ -13,9 +13,8 @@
    :app {:port (or (System/getenv "APP_PORT") 9090)
          :modules {:fhir {:entities_list (:entities  fhir)
                           :resources     (:resource_list fhir)}
-                   :auth {
-                          ;; :super_user   {:_id "admin"
-                          ;;                }
-                          ;; :super_client {}
-                          }}
+                   :auth {:super_user   {:_id "admin"
+                                         :password (or (System/getenv "AMPLIFHIR_ADMIN_PASSWORD") "secret")}
+                          :super_client {:_id "root"
+                                         :password (or (System/getenv "AMPLIFHIR_ROOT_PASSWORD")  "secret")}}}
          :validation {:json_schema (slurp (io/resource "fhir_schema.json"))}}})

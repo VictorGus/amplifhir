@@ -12,6 +12,9 @@
         rb* (dissoc rb :_id)]
     (db/create conn history-collection {:_id id :id _id :resource rb* :action (name op) :modified_ts now})))
 
+(defn history-hook [ctx req]
+  )
+
 (defn get-history [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [params] :as request}]
     (let [id       (:id params)
