@@ -16,6 +16,9 @@ repl:
 ui-repl:
 	rm -rf .cpcache/ && rm -rf ui/.cpcache/ && DEBUG=true && cd ui && clojure -A:test:nrepl
 
+ui-watch:
+	rm -rf ui/.cpcache/ && cd ui && npx shadow-cljs watch app
+
 build:
 	clojure -A:build
 	mv target/app-1.0.0-SNAPSHOT-standalone.jar app.jar
