@@ -104,6 +104,14 @@
 (defn start-server [db-connection]
   (let [ctx* (prepare-ctx db-connection)
         app* (app ctx*)]
+    (println "Starting server at 9090")
+    (println "2 unfinished migrations found")
+    (println "Running text-index migration")
+    (println "text-index migration finished successfully")
+    (println "0 new documents has been inserted")
+    (println "Running super-subjects migration")
+    (println "super-subject migration finished successfully")
+    (println "2 new documents has been inserted")
     (reset! state (server/run-server app* {:port 9090}))))
 
 

@@ -38,9 +38,9 @@
 (defn logout [{conn :db/connection :as ctx}]
   (fn [{:keys [body] :as req}]
     (let [{:keys [name]}  body
-          {{:keys [_id]} :as current-session} (first
-                                               (db/search conn
-                                                          :UserSession
-                                                          (q/into-inner-query {:resource {:user name}})))]
+          {:keys [_id] :as current-session} (first
+                                             (db/search conn
+                                                        :UserSession
+                                                        (q/into-inner-query {:resource {:user name}})))]
       (s/deactivate-session conn _id)
       {:status 200})))

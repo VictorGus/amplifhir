@@ -10,9 +10,6 @@ MONGO_HOST ?= localhost
 .EXPORT_ALL_VARIABLES:
 .PHONY: test build
 
-# repl:
-# 	rm -rf .cpcache/ && rm -rf ui/.cpcache/ && DEBUG=true && cd ui && clojure -A:dev:test:nrepl
-
 repl:
 	clojure -A:test:nrepl -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]"
 

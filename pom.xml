@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      
+  
   
   
   
@@ -24,6 +26,8 @@
   
   
   <modelVersion>4.0.0</modelVersion>
+      
+  
   
   
   
@@ -48,6 +52,8 @@
   
   
   <groupId>pof</groupId>
+      
+  
   
   
   
@@ -72,6 +78,8 @@
   
   
   <artifactId>app</artifactId>
+      
+  
   
   
   
@@ -96,6 +104,8 @@
   
   
   <version>1.0.0-SNAPSHOT</version>
+      
+  
   
   
   
@@ -120,6 +130,8 @@
   
   
   <name>web-project-template</name>
+      
+  
   
   
   
@@ -144,168 +156,190 @@
   
   
   <dependencies>
-    
+        
     <dependency>
-      
+            
       <groupId>org.clojure</groupId>
-      
+            
       <artifactId>clojure</artifactId>
-      
+            
       <version>1.10.1</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
+      <groupId>metosin</groupId>
+            
+      <artifactId>scjsv</artifactId>
+            
+      <version>0.6.2</version>
+          
+    </dependency>
+        
+    <dependency>
+            
       <groupId>ring-cors</groupId>
-      
+            
       <artifactId>ring-cors</artifactId>
-      
+            
       <version>0.1.13</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
       <groupId>ring</groupId>
-      
+            
       <artifactId>ring-defaults</artifactId>
-      
+            
       <version>0.3.2</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
       <groupId>honeysql</groupId>
-      
+            
       <artifactId>honeysql</artifactId>
-      
+            
       <version>0.9.8</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
       <groupId>ring</groupId>
-      
+            
       <artifactId>ring-json</artifactId>
-      
+            
       <version>0.5.0</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
       <groupId>clj-http</groupId>
-      
+            
       <artifactId>clj-http</artifactId>
-      
+            
       <version>3.10.1</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
       <groupId>route-map</groupId>
-      
+            
       <artifactId>route-map</artifactId>
-      
+            
       <version>0.0.7-RC4</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
       <groupId>clj-jwt</groupId>
-      
+            
       <artifactId>clj-jwt</artifactId>
-      
+            
       <version>0.1.1</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
       <groupId>hikari-cp</groupId>
-      
+            
       <artifactId>hikari-cp</artifactId>
-      
+            
       <version>2.10.0</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
       <groupId>cheshire</groupId>
-      
+            
       <artifactId>cheshire</artifactId>
-      
+            
       <version>5.9.0</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
+      <groupId>json-schema</groupId>
+            
+      <artifactId>json-schema</artifactId>
+            
+      <version>0.2.0-RC11</version>
+          
+    </dependency>
+        
+    <dependency>
+            
       <groupId>com.novemberain</groupId>
-      
+            
       <artifactId>monger</artifactId>
-      
+            
       <version>3.5.0</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
       <groupId>ring</groupId>
-      
+            
       <artifactId>ring</artifactId>
-      
+            
       <version>1.7.1</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
       <groupId>ring</groupId>
-      
+            
       <artifactId>ring-mock</artifactId>
-      
+            
       <version>0.4.0</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
       <groupId>ring</groupId>
-      
+            
       <artifactId>ring-core</artifactId>
-      
+            
       <version>1.8.1</version>
-      
+          
     </dependency>
-    
+        
     <dependency>
-      
+            
       <groupId>org.clojure</groupId>
-      
+            
       <artifactId>core.async</artifactId>
-      
+            
       <version>1.1.587</version>
-      
+          
     </dependency>
-
+        
     <dependency>
-      
+            
       <groupId>http-kit</groupId>
-      
+            
       <artifactId>http-kit</artifactId>
-      
+            
       <version>2.3.0</version>
-      
+          
     </dependency>
-    
+      
   </dependencies>
+      
+  
   
   
   
@@ -330,6 +364,8 @@
   
   
   <build>
+            
+    
     
     
     
@@ -354,6 +390,7 @@
     
     
     <sourceDirectory>src</sourceDirectory>
+            
     
     
     
@@ -376,8 +413,11 @@
     
     
     
-    
+  
+  
   </build>
+      
+  
   
   
   
@@ -402,17 +442,19 @@
   
   
   <repositories>
-    
+        
     <repository>
-      
+            
       <id>clojars</id>
-      
+            
       <url>https://repo.clojars.org/</url>
-      
+          
     </repository>
-    
+      
   </repositories>
-  
+      
+
+
 
 
 

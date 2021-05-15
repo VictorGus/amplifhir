@@ -8,8 +8,10 @@
     "@ant-design/colors": "^6.0.0",
     "@ant-design/icons": "^4.5.0",
     "antd": "4.14.0",
+    "highlight.js": "9.15.10",
     "react": "16.9.0",
-    "react-dom": "16.9.0"
+    "react-dom": "16.9.0",
+    "react-highlight.js": "1.0.7"
   },
   "devDependencies": {
     "shadow-cljs": "2.12.5"

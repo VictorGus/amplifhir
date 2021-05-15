@@ -37,7 +37,8 @@
                 day8.re-frame/test         {:mvn/version "0.1.5"}
                 binaryage/devtools         {:mvn/version "0.9.10"}
                 re-frisk                   {:mvn/version "0.5.4.1"}}
-   :main-opts  ["-m" "shadow.cljs.devtools.cli"]}
+   ;; :main-opts  ["-m" "shadow.cljs.devtools.cli"]
+   }
   :runner
   {:extra-deps
    {com.cognitect/test-runner
