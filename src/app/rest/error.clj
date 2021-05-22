@@ -25,8 +25,7 @@
                                    (= :invalid-search-param error-type)
                                    {:code "invalid"
                                     :severity "error"})]
-               (merge resource-body (into {} (filter second (cond-> {:diagnostics diagnostics
-                                                                     :location   "TODO"}
+               (merge resource-body (into {} (filter second (cond-> {:diagnostics diagnostics}
                                                               expression
                                                               (assoc :expression expression)))))))
            errors)})

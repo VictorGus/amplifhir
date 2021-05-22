@@ -33,33 +33,35 @@
 ;;TODO - add call of hooks returning errors
 (defn call-hooks [{:keys [request-method] :as req}
                   {:keys [entity modules operation] :as ctx}]
-  (reduce-kv
-   (fn [acc k {{:keys [operations resources]} :trigger handler :handler :as v}]
-     (if (or
-          (and (all? resources) (all? operations))
+  (let [res (reduce-kv
+             (fn [acc k {{:keys [operations resources]} :trigger handler :handler :as v}]
+               (if (or
+                    (and (all? resources) (all? operations))
 
-          (and (all? resources) (and (vector? operations)
-                                     ((set operations) operation)))
+                    (and (all? resources) (and (vector? operations)
+                                               ((set operations) operation)))
 
-          (and (and (whole-module? resources)
-                    (in-module? (get modules resources) entity)) (all? operations))
+                    (and (and (whole-module? resources)
+                              (in-module? (get modules resources) entity)) (all? operations))
 
-          (and (and (whole-module? resources)
-                    (in-module? (get modules resources) entity)) (and (vector? operations)
-                                                                      ((set operations) operation)))
+                    (and (and (whole-module? resources)
+                              (in-module? (get modules resources) entity)) (and (vector? operations)
+                                                                                ((set operations) operation)))
 
-          (and (and (vector? resources)
-                    ((set resources) entity)) (all? operations))
+                    (and (and (vector? resources)
+                              ((set resources) entity)) (all? operations))
 
-          (and (and (vector? resources)
-                    ((set resources) entity)) (and (vector? operations)
-                                                   ((set operations) operation))))
-       (let [errors (handler ctx req)]
-         (when errors
-           (reduced errors)))
-       nil))
-   []
-   (get-hooks)))
+                    (and (and (vector? resources)
+                              ((set resources) entity)) (and (vector? operations)
+                                                             ((set operations) operation))))
+                 (let [errors (handler ctx req)]
+                   (when errors
+                     (reduced errors)))
+                 nil))
+             []
+             (get-hooks))]
+    (when (not= res req)
+      res)))
 
 (comment
 

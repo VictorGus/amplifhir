@@ -129,7 +129,7 @@
   (mg-col/remove-by-id @db collection id))
 
 (defn ensure-index [db collection keys name]
-  (mg-col/ensure-index @db keys {:name name}))
+  (mg-col/ensure-index @db collection keys {:name name}))
 
 (defn count-documents
   ([db collection]
@@ -160,13 +160,13 @@
 
   (mg-col/find-maps @db-connection "Patient" {mg-ops/$text {mg-ops/$search "\"City\"\"Given\""}})
 
-  (mg-col/indexes-on @db-connection "Observation")
-
   (mg-col/ensure-index @db-connection :Patient {:name "text" :name.family "text" :name.given "text"} {:name "patient_text"})
 
   (mg-col/update @db-connection "Patient" {:_id "f7188e01-7eaf-4aa8-888c-8e496e41e608"} {mg-ops/$set {:address [{:city "City"}]}})
 
   (mg-col/update @db-connection "Migration" {:_id "test"} {mg-ops/$currentDate {:test true}})
+
+  (mg-col/indexes-on @db-connection "Patient")
 
   (update-by-id db-connection "Migration" "test" {:currentDate {:completedDateTime true}})
 
@@ -176,11 +176,11 @@
 
   (drop-index db-connection "Patient")
 
-  (truncate-collection db-connection "User")
+  (truncate-collection db-connection :Migration)
 
-  (search test-connection :Migration {})
+  (search db-connection :Migration {})
 
-  (delete-by-id test-connection :Migration "super-subjects")
+  (delete-by-id db-connection :Migration "text-index")
 
   (search-by-id db-connection :Patient "f7188e01-7eaf-4aa8-888c-8e496e41e608")
 
@@ -205,6 +205,5 @@
   (search db-connection :UserSession {})
 
   (update-by-id db-connection :UserSession "123" {:set {"resource.status" "stale"}})
-
 
   )

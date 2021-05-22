@@ -57,10 +57,8 @@
             (history/log-to-history ctx :create (dissoc resource :resourceType))
             {:body resource
              :status 201})
-
           :else
-          {:body {:message "TODO validation"}
-           :status 422})))))
+          {:status 422})))))
 
 (defn patch-resource [{conn :db/connection rt :entity :as ctx}]
   (fn [{:keys [body params] :as request}]
