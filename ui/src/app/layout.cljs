@@ -2,6 +2,7 @@
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
             [app.styles :as styles]
+            [zframes.title :as title]
             [zframes.flash :as flash]))
 
 (def layout-style
@@ -11,5 +12,6 @@
     [:ul {:padding-left "20px"}]]))
 
 (defn layout [page]
+  (title/change-title "Amplifhir")
   [:div.h-100 layout-style
    [:div page]])

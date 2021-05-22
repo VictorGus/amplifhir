@@ -1,5 +1,5 @@
 (ns app.login.model
-  (:require [re-frame.core :as rf]))
+  (:require [re-frame.core  :as rf]))
 
 (def index ::index)
 
@@ -16,3 +16,16 @@
      {}
      (= phase :init)
      {})))
+
+(rf/reg-event-fx
+ ::sign-in
+ (fn [{db :db} [_ values]]
+   (let [{:keys [username password]} (clojure.walk/keywordize-keys values)]
+     #_(let [encoded #?(:clj  (String. (.encodeToString (Base64/getEncoder) (get-in db [form/form-path :password])))
+                        :cljs (js/btoa (get-in db [form/form-path :password])))]
+         {:xhr/fetch  {:uri"/Login/"
+                       :body {:login (get-in db [form/form-path :login])
+                              :password encoded}
+                       :method "POST"
+                       :success {:event ::success-redirect}
+                       :req-id index}}))))
